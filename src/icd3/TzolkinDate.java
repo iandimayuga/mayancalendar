@@ -19,6 +19,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
 
     /**
      * Instantiates a TzolkinDate object from its integer representation.
+     *
      * @param value The integer representation.
      */
     public TzolkinDate(int value)
@@ -26,7 +27,9 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see icd3.MayanDate#plus(int)
      */
     @Override
@@ -36,7 +39,9 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see icd3.MayanDate#minus(java.lang.Object)
      */
     @Override
@@ -46,7 +51,9 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see icd3.MayanDate#toInt()
      */
     @Override
@@ -58,11 +65,33 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
 
     /*
      * (non-Javadoc)
+     *
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString()
     {
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see icd3.MayanDate#regex()
+     */
+    @Override
+    public String regex()
+    {
+        // TODO Auto-generated method stub
         return null;
     }
 }

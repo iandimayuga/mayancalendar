@@ -35,4 +35,17 @@ public interface MayanDate<T>
      * @return The String representation of this date.
      */
     public String toString();
+
+    /**
+     * Determines whether this date is equivalent to another date of the same type.
+     * @param o Another date of the same type with which to compare.
+     * @return True if o is a non-null MayanDate of the same type that represents the same equivalence class.
+     */
+    public boolean equals(Object o);
+
+    /**
+     * Gives the regular expression matching all strings representing this date.
+     * @return A regular expression that defines this date representation.
+     */
+    public String regex();
 }
