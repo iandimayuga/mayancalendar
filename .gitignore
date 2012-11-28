@@ -1,0 +1,13 @@
+*.tar.gz
+.*.swp
+
+# Output Files #
+*.class
+
+# Eclipse Files #
+.classpath
+.settings/
+.project
+.metadata
+bin/
+
