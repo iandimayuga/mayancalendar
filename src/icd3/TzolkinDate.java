@@ -14,6 +14,99 @@ import java.util.regex.Pattern;
 public class TzolkinDate implements MayanDate<TzolkinDate>
 {
     /**
+     * Integer representation of this date
+     */
+    private int m_value;
+
+    /**
+     * Instantiates a TzolkinDate object from its integer representation.
+     *
+     * @param value The integer representation.
+     */
+    public TzolkinDate(int value)
+    {
+        int cycle = TzolkinDate.cycle();
+
+        // Ensure that value is within the positive equivalence class (mod cycle)
+        m_value = (value % cycle + cycle) % cycle;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see icd3.MayanDate#plus(int)
+     */
+    @Override
+    public TzolkinDate plus(int days)
+    {
+        // Simply add days to the integer representation
+        return new TzolkinDate(this.toInt() + days);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see icd3.MayanDate#minus(java.lang.Object)
+     */
+    @Override
+    public int minus(TzolkinDate other)
+    {
+        if (null == other)
+        {
+            throw new NullPointerException("Cannot subtract a null Tzolkin Date");
+        }
+
+        // Subtract the integer representations
+        int difference = this.toInt() - other.toInt();
+        int cycle = TzolkinDate.cycle();
+
+        // Ensure that difference is within the positive equivalence class (mod cycle)
+        return (difference % cycle + cycle) % cycle;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see icd3.MayanDate#toInt()
+     */
+    @Override
+    public int toInt()
+    {
+        // Return the internal integer value
+        return m_value;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        // Coefficient is 1-based
+        int digit = m_value % s_numCoefficients + 1;
+
+        // Day number corresponds to a day name in the static array
+        int dayNumber = m_value % s_dayNames.length;
+        String dayName = s_dayNames[dayNumber];
+
+        return String.format("%d.%s", digit, dayName);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        // Must be non-null, also a TzolkinDate, and have the same integer representation
+        return o != null && o instanceof TzolkinDate && ((TzolkinDate) o).toInt() == this.toInt();
+    }
+
+    /**
      * The length of the cycle followed by the coefficients in a Tzolkin date.
      */
     private static final int s_numCoefficients = 13;
@@ -36,6 +129,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
 
     // Regex capture group names
     private static final String s_digitGroup = "tzolkinDigit";
+
     private static final String s_dayGroup = "tzolkinDay";
 
     /**
@@ -138,98 +232,5 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
 
         // The integer representation is given by the multiplication of the two
         return new TzolkinDate(digit * dayNumber);
-    }
-
-    /**
-     * Integer representation of this date
-     */
-    private int m_value;
-
-    /**
-     * Instantiates a TzolkinDate object from its integer representation.
-     *
-     * @param value The integer representation.
-     */
-    public TzolkinDate(int value)
-    {
-        int cycle = TzolkinDate.cycle();
-
-        // Ensure that value is within the positive equivalence class (mod cycle)
-        m_value = (value % cycle + cycle) % cycle;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see icd3.MayanDate#plus(int)
-     */
-    @Override
-    public TzolkinDate plus(int days)
-    {
-        // Simply add days to the integer representation
-        return new TzolkinDate(this.toInt() + days);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see icd3.MayanDate#minus(java.lang.Object)
-     */
-    @Override
-    public int minus(TzolkinDate other)
-    {
-        if (null == other)
-        {
-            throw new NullPointerException("Cannot subtract a null Tzolkin Date");
-        }
-
-        // Subtract the integer representations
-        int difference = this.toInt() - other.toInt();
-        int cycle = TzolkinDate.cycle();
-
-        // Ensure that difference is within the positive equivalence class (mod cycle)
-        return (difference % cycle + cycle) % cycle;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see icd3.MayanDate#toInt()
-     */
-    @Override
-    public int toInt()
-    {
-        // Return the internal integer value
-        return m_value;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString()
-    {
-        // Coefficient is 1-based
-        int digit = m_value % s_numCoefficients + 1;
-
-        // Day number corresponds to a day name in the static array
-        int dayNumber = m_value % s_dayNames.length;
-        String dayName = s_dayNames[dayNumber];
-
-        return String.format("%d.%s", digit, dayName);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object o)
-    {
-        // Must be non-null, also a TzolkinDate, and have the same integer representation
-        return o != null && o instanceof TzolkinDate && ((TzolkinDate) o).toInt() == this.toInt();
     }
 }

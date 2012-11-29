@@ -10,40 +10,6 @@ import java.util.regex.Pattern;
  */
 public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
 {
-    // Least common multiple of Tzolkin and Haab
-    private static final int s_cycle = 18980;
-
-    // Regular expression capture groups
-    private static final String s_tzolkinGroup = "tzolkin";
-    private static final String s_haabGroup = "haab";
-
-    /**
-     * Return a regular expression describing the string representation of a Calendar Round date. The string
-     * representation is case and whitespace insensitive.
-     *
-     * @return A regular expression pattern that will match the allowed representations of this date type.
-     */
-    public static Pattern pattern()
-    {
-        String tzolkinPattern = TzolkinDate.pattern().toString();
-        String haabPattern = HaabDate.pattern().toString();
-
-        String calendarRoundPattern = String.format("\\s*(?<%s>%s)\\s+(?<%s>%s)\\s*", s_tzolkinGroup, tzolkinPattern,
-                s_haabGroup, haabPattern);
-
-        return Pattern.compile(calendarRoundPattern, Pattern.CASE_INSENSITIVE);
-    }
-
-    /**
-     * Give the number of date representations possible in the Calendar Round system.
-     *
-     * @return The number of equivalence classes represented by Calendar Round dates.
-     */
-    public static int cycle()
-    {
-        return s_cycle;
-    }
-
     private int m_value;
 
     /**
@@ -156,5 +122,40 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
     {
         // Must be non-null, also a CalendarRoundDate, and have the same integer representation
         return o != null && o instanceof CalendarRoundDate && ((CalendarRoundDate) o).toInt() == this.toInt();
+    }
+
+    // Least common multiple of Tzolkin and Haab
+    private static final int s_cycle = 18980;
+
+    // Regular expression capture groups
+    private static final String s_tzolkinGroup = "tzolkin";
+
+    private static final String s_haabGroup = "haab";
+
+    /**
+     * Return a regular expression describing the string representation of a Calendar Round date. The string
+     * representation is case and whitespace insensitive.
+     *
+     * @return A regular expression pattern that will match the allowed representations of this date type.
+     */
+    public static Pattern pattern()
+    {
+        String tzolkinPattern = TzolkinDate.pattern().toString();
+        String haabPattern = HaabDate.pattern().toString();
+
+        String calendarRoundPattern = String.format("\\s*(?<%s>%s)\\s+(?<%s>%s)\\s*", s_tzolkinGroup, tzolkinPattern,
+                s_haabGroup, haabPattern);
+
+        return Pattern.compile(calendarRoundPattern, Pattern.CASE_INSENSITIVE);
+    }
+
+    /**
+     * Give the number of date representations possible in the Calendar Round system.
+     *
+     * @return The number of equivalence classes represented by Calendar Round dates.
+     */
+    public static int cycle()
+    {
+        return s_cycle;
     }
 }

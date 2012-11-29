@@ -10,17 +10,6 @@ import java.util.regex.Pattern;
  */
 public class LongCountDate implements MayanDate<LongCountDate>
 {
-    /**
-     * Return a regular expression describing the string representation of a Mayan Long Count date. The string
-     * representation is whitespace insensitive.
-     *
-     * @return A regular expression pattern that will match the allowed representations of this date type.
-     */
-    public static Pattern pattern()
-    {
-        return null;
-    }
-
     /*
      * (non-Javadoc)
      *
@@ -77,5 +66,16 @@ public class LongCountDate implements MayanDate<LongCountDate>
     public boolean equals(Object o)
     {
         return false;
+    }
+
+    /**
+     * Return a regular expression describing the string representation of a Mayan Long Count date. The string
+     * representation is whitespace insensitive.
+     *
+     * @return A regular expression pattern that will match the allowed representations of this date type.
+     */
+    public static Pattern pattern()
+    {
+        return null;
     }
 }

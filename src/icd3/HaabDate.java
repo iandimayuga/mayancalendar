@@ -14,6 +14,99 @@ import java.util.regex.Pattern;
 public class HaabDate implements MayanDate<HaabDate>
 {
     /**
+     * Integer representation of this date
+     */
+    private int m_value;
+
+    /**
+     * Instantiates a HaabDate object from its integer representation.
+     *
+     * @param value The integer representation.
+     */
+    public HaabDate(int value)
+    {
+        int cycle = HaabDate.cycle();
+
+        // Ensure that value is within the positive equivalence class (mod cycle)
+        m_value = (value % cycle + cycle) % cycle;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see icd3.MayanDate#plus(int)
+     */
+    @Override
+    public HaabDate plus(int days)
+    {
+        // Simply add days to the integer representation
+        return new HaabDate(this.toInt() + days);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see icd3.MayanDate#minus(java.lang.Object)
+     */
+    @Override
+    public int minus(HaabDate other)
+    {
+        if (null == other)
+        {
+            throw new NullPointerException("Cannot subtract a null Haab Date");
+        }
+
+        // Subtract the integer representations
+        int difference = this.toInt() - other.toInt();
+        int cycle = HaabDate.cycle();
+
+        // Ensure that difference is within the positive equivalence class (mod cycle)
+        return (difference % cycle + cycle) % cycle;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see icd3.MayanDate#toInt()
+     */
+    @Override
+    public int toInt()
+    {
+        // Return the internal integer value
+        return m_value;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString()
+    {
+        // Month number corresponds to a month name in the static array
+        int monthNumber = m_value / s_daysPerMonth;
+        String monthName = s_monthNames[monthNumber];
+
+        // Day number is the remainder + 1
+        int dayNumber = m_value % s_daysPerMonth + 1;
+
+        return String.format("%d.%s", dayNumber, monthName);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object o)
+    {
+        // Must be non-null, also a HaabDate, and have the same integer representation
+        return o != null && o instanceof HaabDate && ((HaabDate) o).toInt() == this.toInt();
+    }
+
+    /**
      * The length of the months in the first 360 days of the Haab calendar.
      */
     private static final int s_daysPerMonth = 20;
@@ -41,6 +134,7 @@ public class HaabDate implements MayanDate<HaabDate>
 
     // Regex capture group names
     private static final String s_digitGroup = "haabDigit";
+
     private static final String s_monthGroup = "haabMonth";
 
     /**
@@ -139,98 +233,5 @@ public class HaabDate implements MayanDate<HaabDate>
 
         // The integer representation is given by month * daysPerMonth + day
         return new HaabDate(monthNumber * s_daysPerMonth + day);
-    }
-
-    /**
-     * Integer representation of this date
-     */
-    private int m_value;
-
-    /**
-     * Instantiates a HaabDate object from its integer representation.
-     *
-     * @param value The integer representation.
-     */
-    public HaabDate(int value)
-    {
-        int cycle = HaabDate.cycle();
-
-        // Ensure that value is within the positive equivalence class (mod cycle)
-        m_value = (value % cycle + cycle) % cycle;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see icd3.MayanDate#plus(int)
-     */
-    @Override
-    public HaabDate plus(int days)
-    {
-        // Simply add days to the integer representation
-        return new HaabDate(this.toInt() + days);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see icd3.MayanDate#minus(java.lang.Object)
-     */
-    @Override
-    public int minus(HaabDate other)
-    {
-        if (null == other)
-        {
-            throw new NullPointerException("Cannot subtract a null Haab Date");
-        }
-
-        // Subtract the integer representations
-        int difference = this.toInt() - other.toInt();
-        int cycle = HaabDate.cycle();
-
-        // Ensure that difference is within the positive equivalence class (mod cycle)
-        return (difference % cycle + cycle) % cycle;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see icd3.MayanDate#toInt()
-     */
-    @Override
-    public int toInt()
-    {
-        // Return the internal integer value
-        return m_value;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#toString()
-     */
-    @Override
-    public String toString()
-    {
-        // Month number corresponds to a month name in the static array
-        int monthNumber = m_value / s_daysPerMonth;
-        String monthName = s_monthNames[monthNumber];
-
-        // Day number is the remainder + 1
-        int dayNumber = m_value % s_daysPerMonth + 1;
-
-        return String.format("%d.%s", dayNumber, monthName);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object o)
-    {
-        // Must be non-null, also a HaabDate, and have the same integer representation
-        return o != null && o instanceof HaabDate && ((HaabDate) o).toInt() == this.toInt();
     }
 }
