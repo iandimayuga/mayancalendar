@@ -6,7 +6,7 @@ package icd3;
 /**
  * An immutable data structure to represent a date in different Mayan calendars.
  *
- * The date representation is only compatible with other date representations of the same type.
+ * The date representation is only comparable with other date representations of the same type.
  */
 public interface MayanDate<T>
 {
