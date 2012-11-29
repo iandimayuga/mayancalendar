@@ -21,8 +21,11 @@ public interface MayanDate<T>
      * Calculate the difference between this date and another date of the same type.
      * @param other The other date of the same type.
      * @return The difference between the two dates.
+     * In an absolute date system (such as the Long Count), minus MAY return a negative.
+     * However, in a cyclic system (such as the Tzolkin), minus SHOULD return the positive equivalence class.
+     * @throws NullPointerException If other is null.
      */
-    public T minus(T other);
+    public int minus(T other);
 
     /**
      * Gives the internal integer representation of this date.

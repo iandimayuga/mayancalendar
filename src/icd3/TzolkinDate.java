@@ -119,7 +119,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      * @see icd3.MayanDate#minus(java.lang.Object)
      */
     @Override
-    public TzolkinDate minus(TzolkinDate other)
+    public int minus(TzolkinDate other)
     {
         // TODO Auto-generated method stub
         return null;
