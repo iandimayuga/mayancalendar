@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MayanCalendar" default="build" basedir=".">
+  <target name="build" description="Create a jar for the MayanCalendar project">
+    <mkdir dir="bin"/>
+    <javac srcdir="./src:./test" classpath="junit-4.10.jar" destdir="bin" includeantruntime="false"/>
+    <jar destfile="mayan.jar" basedir="bin" >
+    </jar>
+  </target>
+
+  <property name="lib" value="." />
+  <property name="tzolkinTest.class.name" value="icd3.TzolkinTest" />
+  <property name="haabTest.class.name" value="icd3.HaabTest" />
+
+  <path id="test.classpath">
+    <pathelement location="bin" />
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="tzolkinTest">
+    <junit fork="yes" haltonfailure="yes">
+      <test name="${tzolkinTest.class.name}" />
+      <formatter type="plain" usefile="false" />
+      <classpath refid="test.classpath" />
+    </junit>
+  </target>
+
+  <target name="haabTest">
+    <junit fork="yes" haltonfailure="yes">
+      <test name="${haabTest.class.name}" />
+      <formatter type="plain" usefile="false" />
+      <classpath refid="test.classpath" />
+    </junit>
+  </target>
+</project>
