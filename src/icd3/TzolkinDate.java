@@ -35,8 +35,8 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     private static final Pattern s_pattern = generatePattern(s_dayNames);
 
     // Regex capture group names
-    private static final String GROUP_DIGIT = "digit";
-    private static final String GROUP_DAY = "day";
+    private static final String s_digitGroup = "digit";
+    private static final String s_dayGroup = "day";
 
     /**
      * Generate the lookup table given an array of day names.
@@ -62,7 +62,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         StringBuilder patternBuilder = new StringBuilder();
 
         // Add the digit, dot, and begin capturing group for day name
-        patternBuilder.append(String.format("\\s*(?<%s>\\d)+\\s*\\.\\s*(?<%s>", GROUP_DIGIT, GROUP_DAY));
+        patternBuilder.append(String.format("\\s*(?<%s>\\d)+\\s*\\.\\s*(?<%s>", s_digitGroup, s_dayGroup));
 
         // First name not preceded by a pipe "|"
         patternBuilder.append(dayNames[0]);
@@ -116,8 +116,8 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         }
 
         // Extract capture groups
-        int digit = Integer.parseInt(m.group(GROUP_DIGIT));
-        String day = m.group(GROUP_DAY);
+        int digit = Integer.parseInt(m.group(s_digitGroup));
+        String day = m.group(s_dayGroup);
 
         // The digit is one-based, but we use zero-based for multiplicative purposes
         digit -= 1;
