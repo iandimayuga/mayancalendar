@@ -40,6 +40,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
 
     /**
      * Generate the lookup table given an array of day names.
+     *
      * @param dayNames Array of day names.
      * @return The lookup table.
      */
@@ -56,13 +57,19 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         return nameTable;
     }
 
+    /**
+     * Generate the regex pattern to match Tzolkin dates.
+     *
+     * @param dayNames The named days in the Tzolkin system.
+     * @return A pattern that will match Tzolkin dates (case and whitespace insensitive).
+     */
     private static Pattern generatePattern(String[] dayNames)
     {
         // Build the regex string dynamically
         StringBuilder patternBuilder = new StringBuilder();
 
         // Add the digit, dot, and begin capturing group for day name
-        patternBuilder.append(String.format("\\s*(?<%s>0*([1-9]|1[0-3]))+\\s*\\.\\s*(?<%s>", s_digitGroup, s_dayGroup));
+        patternBuilder.append(String.format("\\s*(?<%s>0*([1-9]|1[0-3]))\\s*\\.\\s*(?<%s>", s_digitGroup, s_dayGroup));
 
         // First name not preceded by a pipe "|"
         patternBuilder.append(dayNames[0]);
@@ -73,12 +80,15 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
             patternBuilder.append(String.format("|%s", dayNames[i]));
         }
 
+        patternBuilder.append(")\\s*");
+
         // Compile the pattern from the generated regex, with case insensitivity
         return Pattern.compile(patternBuilder.toString(), Pattern.CASE_INSENSITIVE);
     }
 
     /**
-     * Return a regular expression describing the string representation of a Tzolkin date.
+     * Return a regular expression describing the string representation of a Tzolkin date. The string representation is
+     * case and whitespace insensitive.
      *
      * @return A regular expression pattern that will match the allowed representations of this date type.
      */
@@ -89,6 +99,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
 
     /**
      * Give the number of date representations possible in the Tzolkin system.
+     *
      * @return The number of equivalence classes represented by Tzolkin dates.
      */
     public static int cycle()
@@ -219,6 +230,6 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     public boolean equals(Object o)
     {
         // Must be non-null, also a TzolkinDate, and have the same integer representation
-        return o != null && o instanceof TzolkinDate && ((TzolkinDate)o).toInt() == this.toInt();
+        return o != null && o instanceof TzolkinDate && ((TzolkinDate) o).toInt() == this.toInt();
     }
 }
