@@ -57,21 +57,15 @@ public class TzolkinDateTest
     }
 
     /**
-     * Test method for {@link icd3.TzolkinDate#toInt()}.
-     */
-    @Test
-    public void testToInt()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
      * Test method for {@link icd3.TzolkinDate#toString()}.
      */
     @Test
     public void testToString()
     {
-        fail("Not yet implemented");
+        assertEquals("1.imix", new TzolkinDate(0).toString());
+        assertEquals("2.ik", new TzolkinDate(1).toString());
+        assertEquals("8.imix", new TzolkinDate(20).toString());
+        assertEquals("12.chikchan", new TzolkinDate(24).toString());
     }
 
     /**
@@ -80,25 +74,9 @@ public class TzolkinDateTest
     @Test
     public void testEqualsObject()
     {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.TzolkinDate#pattern()}.
-     */
-    @Test
-    public void testPattern()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.TzolkinDate#cycle()}.
-     */
-    @Test
-    public void testCycle()
-    {
-        fail("Not yet implemented");
+        assertEquals(new TzolkinDate(0), new TzolkinDate(0));
+        assertEquals(new TzolkinDate(24), TzolkinDate.parse("12.chikchan"));
+        assertEquals(new TzolkinDate(148), TzolkinDate.parse("6.muluk"));
     }
 
     /**
@@ -107,7 +85,9 @@ public class TzolkinDateTest
     @Test
     public void testParse()
     {
-        fail("Not yet implemented");
+        assertEquals(new TzolkinDate(0), new TzolkinDate(0));
+        assertEquals(new TzolkinDate(44), TzolkinDate.parse("006.chiKChan"));
+        assertEquals(new TzolkinDate(243), TzolkinDate.parse(" 10 . kan "));
     }
 
 }
