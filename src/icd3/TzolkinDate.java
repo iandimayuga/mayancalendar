@@ -62,7 +62,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         StringBuilder patternBuilder = new StringBuilder();
 
         // Add the digit, dot, and begin capturing group for day name
-        patternBuilder.append(String.format("\\s*(?<%s>\\d)+\\s*\\.\\s*(?<%s>", s_digitGroup, s_dayGroup));
+        patternBuilder.append(String.format("\\s*(?<%s>0*([1-9]|1[0-3]))+\\s*\\.\\s*(?<%s>", s_digitGroup, s_dayGroup));
 
         // First name not preceded by a pipe "|"
         patternBuilder.append(dayNames[0]);
