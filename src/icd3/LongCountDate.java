@@ -56,11 +56,12 @@ public class LongCountDate implements MayanDate<LongCountDate>
 
     /**
      * Get the baktun that this date is in.
+     *
      * @return The number in the baktun place.
      */
     public int getBaktun()
     {
-        return m_value / s_placeValues[4];
+        return m_value / s_placeValues[s_placeValues.length - 1];
     }
 
     /*
