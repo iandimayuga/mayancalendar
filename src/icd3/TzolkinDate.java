@@ -155,8 +155,8 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     @Override
     public TzolkinDate plus(int days)
     {
-        // TODO Auto-generated method stub
-        return null;
+        // Simply add days to the integer representation
+        return new TzolkinDate(this.toInt() + days);
     }
 
     /*
@@ -167,8 +167,17 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     @Override
     public int minus(TzolkinDate other)
     {
-        // TODO Auto-generated method stub
-        return null;
+        if (null == other)
+        {
+            throw new NullPointerException("Cannot subtract a null Tzolkin Date");
+        }
+
+        // Subtract the integer representations
+        int difference = this.toInt() - other.toInt();
+        int cycle = TzolkinDate.cycle();
+
+        // Ensure that difference is within the positive equivalence class (mod cycle)
+        return (difference % cycle + cycle) % cycle;
     }
 
     /*
