@@ -134,8 +134,9 @@ public class HaabDate implements MayanDate<HaabDate>
 
     // Regex capture group names
     private static final String s_digitGroup = "haabDigit";
-
     private static final String s_monthGroup = "haabMonth";
+    private static final String s_wayebDigitGroup = "haabWayebDigit";
+    private static final String s_wayebMonthGroup = "haabWayebMonth";
 
     /**
      * Generate the lookup table given an array of month names.
@@ -150,7 +151,7 @@ public class HaabDate implements MayanDate<HaabDate>
         for (int i = 0; i < monthNames.length; ++i)
         {
             // Keep everything lower case for case insensitivity
-            s_nameTable.put(monthNames[i].toLowerCase(), i);
+            nameTable.put(monthNames[i].toLowerCase(), i);
         }
 
         return nameTable;
@@ -181,8 +182,8 @@ public class HaabDate implements MayanDate<HaabDate>
         }
 
         // Append the special case for the last month
-        patternBuilder.append(String.format(")\\s*)|(\\s*(<%s>0*[1-5])\\s*\\.\\s*(?<%s>%s))", s_digitGroup,
-                s_monthGroup, monthNames[monthNames.length - 1]));
+        patternBuilder.append(String.format(")\\s*)|(\\s*(<%s>0*[1-5])\\s*\\.\\s*(?<%s>%s))", s_wayebDigitGroup,
+                s_wayebMonthGroup, monthNames[monthNames.length - 1]));
 
         // Compile the pattern from the generated regex, with case insensitivity
         return Pattern.compile(patternBuilder.toString(), Pattern.CASE_INSENSITIVE);
@@ -227,17 +228,28 @@ public class HaabDate implements MayanDate<HaabDate>
             return null;
         }
 
-        // Extract capture groups
-        int day = Integer.parseInt(m.group(s_digitGroup));
+        String day = m.group(s_digitGroup);
+        if (null == day)
+        {
+            day = m.group(s_wayebDigitGroup);
+        }
+
         String month = m.group(s_monthGroup);
+        if (null == month)
+        {
+            month = m.group(s_wayebMonthGroup);
+        }
+
+        // Extract capture groups
+        int dayNumber = Integer.parseInt(day);
 
         // The digit is one-based, but we use zero-based for multiplicative purposes
-        day -= 1;
+        dayNumber -= 1;
 
         // Look up the month name with lower case for case insensitivity
         int monthNumber = s_nameTable.get(month.toLowerCase());
 
         // The integer representation is given by month * daysPerMonth + day
-        return new HaabDate(monthNumber * s_daysPerMonth + day);
+        return new HaabDate(monthNumber * s_daysPerMonth + dayNumber);
     }
 }
