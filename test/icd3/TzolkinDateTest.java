@@ -39,7 +39,9 @@ public class TzolkinDateTest
     @Test
     public void testPlus()
     {
-        fail("Not yet implemented");
+        assertEquals(75, new TzolkinDate(0).plus(75).toInt());
+        assertEquals(0, new TzolkinDate(259).plus(1).toInt());
+        assertEquals(250, new TzolkinDate(10).plus(-20).toInt());
     }
 
     /**
@@ -48,7 +50,10 @@ public class TzolkinDateTest
     @Test
     public void testMinus()
     {
-        fail("Not yet implemented");
+        TzolkinDate itself = new TzolkinDate(42);
+        assertEquals(0, itself.minus(itself));
+        assertEquals(250, new TzolkinDate(250).minus(new TzolkinDate(0)));
+        assertEquals(10, new TzolkinDate(0).minus(new TzolkinDate(250)));
     }
 
     /**
