@@ -182,7 +182,7 @@ public class HaabDate implements MayanDate<HaabDate>
         }
 
         // Append the special case for the last month
-        patternBuilder.append(String.format(")\\s*)|(\\s*(<%s>0*[1-5])\\s*\\.\\s*(?<%s>%s))", s_wayebDigitGroup,
+        patternBuilder.append(String.format(")\\s*)|(\\s*(?<%s>0*[1-5])\\s*\\.\\s*(?<%s>%s)\\s*)", s_wayebDigitGroup,
                 s_wayebMonthGroup, monthNames[monthNames.length - 1]));
 
         // Compile the pattern from the generated regex, with case insensitivity

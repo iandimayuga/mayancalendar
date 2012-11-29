@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package icd3;
 
@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ *
  */
 public class HaabDateTest
 {
@@ -28,7 +28,9 @@ public class HaabDateTest
     @Test
     public void testHaabDate()
     {
-        fail("Not yet implemented");
+        assertEquals(42, new HaabDate(42).toInt());
+        assertEquals(0, new HaabDate(365).toInt());
+        assertEquals(3, new HaabDate(-362).toInt());
     }
 
     /**
@@ -37,7 +39,9 @@ public class HaabDateTest
     @Test
     public void testPlus()
     {
-        fail("Not yet implemented");
+        assertEquals(75, new HaabDate(0).plus(75).toInt());
+        assertEquals(0, new HaabDate(364).plus(1).toInt());
+        assertEquals(355, new HaabDate(10).plus(-20).toInt());
     }
 
     /**
@@ -46,16 +50,10 @@ public class HaabDateTest
     @Test
     public void testMinus()
     {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.HaabDate#toInt()}.
-     */
-    @Test
-    public void testToInt()
-    {
-        fail("Not yet implemented");
+        HaabDate itself = new HaabDate(42);
+        assertEquals(0, itself.minus(itself));
+        assertEquals(250, new HaabDate(250).minus(new HaabDate(0)));
+        assertEquals(115, new HaabDate(0).minus(new HaabDate(250)));
     }
 
     /**
@@ -64,7 +62,10 @@ public class HaabDateTest
     @Test
     public void testToString()
     {
-        fail("Not yet implemented");
+        assertEquals("1.pohp", new HaabDate(0).toString());
+        assertEquals("2.pohp", new HaabDate(1).toString());
+        assertEquals("1.wo", new HaabDate(20).toString());
+        assertEquals("5.wo", new HaabDate(24).toString());
     }
 
     /**
@@ -73,25 +74,10 @@ public class HaabDateTest
     @Test
     public void testEqualsObject()
     {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.HaabDate#pattern()}.
-     */
-    @Test
-    public void testPattern()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.HaabDate#cycle()}.
-     */
-    @Test
-    public void testCycle()
-    {
-        fail("Not yet implemented");
+        assertEquals(new HaabDate(0), new HaabDate(0));
+        assertEquals(new HaabDate(24), HaabDate.parse("5.wo"));
+        assertEquals(new HaabDate(1), HaabDate.parse("2.pohp"));
+        assertEquals(new HaabDate(364), HaabDate.parse("5.wayeb"));
     }
 
     /**
@@ -100,7 +86,9 @@ public class HaabDateTest
     @Test
     public void testParse()
     {
-        fail("Not yet implemented");
+        assertEquals(new HaabDate(0), new HaabDate(0));
+        assertEquals(new HaabDate(24), HaabDate.parse(" 5 . wo "));
+        assertEquals(new HaabDate(1), HaabDate.parse("02.pOhp"));
     }
 
 }
