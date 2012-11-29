@@ -110,8 +110,7 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
     @Override
     public int toInt()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        return m_value;
     }
 
     /*
@@ -122,7 +121,7 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
     @Override
     public String toString()
     {
-        return null;
+        return String.format("%s %s", this.getTzolkinDate(), this.getHaabDate());
     }
 
     /**
@@ -132,7 +131,8 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
      */
     public TzolkinDate getTzolkinDate()
     {
-        return null;
+        // The Tzolkin integer is value % tzolkin cycle
+        return new TzolkinDate(this.toInt() % TzolkinDate.cycle());
     }
 
     /**
@@ -142,7 +142,8 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
      */
     public HaabDate getHaabDate()
     {
-        return null;
+        // The Haab integer is value % year length
+        return new HaabDate(this.toInt() % HaabDate.cycle());
     }
 
     /*
