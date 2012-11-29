@@ -191,12 +191,29 @@ public class LongCountDate implements MayanDate<LongCountDate>
         return new LongCountDate(total);
     }
 
-    public static LongCountDate calendarRoundToLongCount(CalendarRoundDate calendarRound, int baktun)
+    /**
+     * Return the first Long Count date represented by a Calendar Round date after the specified date.
+     *
+     * @param calendarRound The Calendar Round expression of the desired date.
+     * @param start The minimum Long Count date, inclusive.
+     * @return The first occurrence of the date at or following the start.
+     */
+    public static LongCountDate calendarRoundToLongCount(CalendarRoundDate calendarRound, LongCountDate start)
     {
         return null;
     }
 
-    public static List<LongCountDate> calendarRoundToLongCountList(CalendarRoundDate calendarRound, int baktunMin, int baktunMax)
+    /**
+     * Return all Long Count dates represented by a Calendar Round date within a range of dates
+     *
+     * @param calendarRound The Calendar Round expression of the desired dates.
+     * @param start The minimum date, inclusive.
+     * @param end The maximum date, exclusive.
+     * @return All occurrences of the date within the range.
+     */
+    public static List<LongCountDate> calendarRoundToLongCountList(CalendarRoundDate calendarRound,
+                                                                   LongCountDate start,
+                                                                   LongCountDate end)
     {
         return null;
     }
