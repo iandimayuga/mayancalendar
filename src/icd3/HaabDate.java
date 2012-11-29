@@ -156,6 +156,12 @@ public class HaabDate implements MayanDate<HaabDate>
         return nameTable;
     }
 
+    /**
+     * Generate the regex pattern to match Haab dates.
+     *
+     * @param dayNames The named days in the Haab system.
+     * @return A pattern that will match Haab dates (case and whitespace insensitive).
+     */
     private static Pattern generatePattern(String[] monthNames)
     {
         // Build the regex string dynamically
