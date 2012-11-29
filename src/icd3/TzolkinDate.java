@@ -145,7 +145,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         for (int i = 0; i < dayNames.length; ++i)
         {
             // Keep everything lower case for case insensitivity
-            s_nameTable.put(dayNames[i].toLowerCase(), i);
+            nameTable.put(dayNames[i].toLowerCase(), i);
         }
 
         return nameTable;
