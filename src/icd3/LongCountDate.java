@@ -200,7 +200,17 @@ public class LongCountDate implements MayanDate<LongCountDate>
      */
     public static LongCountDate calendarRoundToLongCount(CalendarRoundDate calendarRound, LongCountDate start)
     {
-        return null;
+        // Find when the specified date begins
+        int startSinceZero = start.toInt();
+
+        // Find the calendarRoundDate corresponding to that beginning
+        CalendarRoundDate calendarRoundStart = s_zeroDay.plus(startSinceZero);
+
+        // Find the difference between the given calendarRound date and the start
+        int daysSinceStart = calendarRound.minus(calendarRoundStart);
+
+        // Instantiate the LongCountDate corresponding to that many days after the start
+        return new LongCountDate(startSinceZero + daysSinceStart);
     }
 
     /**
