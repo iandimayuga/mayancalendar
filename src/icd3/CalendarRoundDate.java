@@ -41,7 +41,33 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
      */
     public static int cycle()
     {
-        return 0;
+        return s_cycle;
+    }
+
+    private int m_value;
+
+    /**
+     * Instantiate a CalendarRoundDate from its components.
+     *
+     * @param tzolkin The Tzolkin component.
+     * @param haab The Haab component.
+     */
+    public CalendarRoundDate(TzolkinDate tzolkin, HaabDate haab)
+    {
+        this(tzolkin.toInt() * haab.toInt());
+    }
+
+    /**
+     * Instantiate a CalendarRoundDate from its integer representation.
+     *
+     * @param value The integer representation.
+     */
+    public CalendarRoundDate(int value)
+    {
+        int cycle = CalendarRoundDate.cycle();
+
+        // Ensure that value is within the positive equivalence class (mod cycle)
+        m_value = (value % cycle + cycle) % cycle;
     }
 
     /*
