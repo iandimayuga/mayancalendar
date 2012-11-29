@@ -78,8 +78,7 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
     @Override
     public CalendarRoundDate plus(int days)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new CalendarRoundDate(this.toInt() + days);
     }
 
     /*
@@ -90,8 +89,17 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
     @Override
     public int minus(CalendarRoundDate other)
     {
-        // TODO Auto-generated method stub
-        return 0;
+        if (null == other)
+        {
+            throw new NullPointerException("Cannot subtract a null Calendar Round Date");
+        }
+
+        // Subtract the integer representations
+        int difference = this.toInt() - other.toInt();
+        int cycle = CalendarRoundDate.cycle();
+
+        // Ensure that difference is within the positive equivalence class (mod cycle)
+        return (difference % cycle + cycle) % cycle;
     }
 
     /*
