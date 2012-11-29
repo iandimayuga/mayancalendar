@@ -8,8 +8,8 @@
   </target>
 
   <property name="lib" value="." />
-  <property name="tzolkinTest.class.name" value="icd3.TzolkinTest" />
-  <property name="haabTest.class.name" value="icd3.HaabTest" />
+  <property name="tzolkinTest.class.name" value="icd3.TzolkinDateTest" />
+  <property name="haabTest.class.name" value="icd3.HaabDateTest" />
 
   <path id="test.classpath">
     <pathelement location="bin" />
