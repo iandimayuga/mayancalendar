@@ -3,6 +3,7 @@
  */
 package icd3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -225,6 +226,24 @@ public class LongCountDate implements MayanDate<LongCountDate>
                                                                    LongCountDate start,
                                                                    LongCountDate end)
     {
-        return null;
+        List<LongCountDate> dates = new ArrayList<LongCountDate>();
+
+        // Get the length of the Calendar Round
+        int cycle = CalendarRoundDate.cycle();
+
+        // Find the first occurrence at or after start
+        LongCountDate occurrence = calendarRoundToLongCount(calendarRound, start);
+
+        // Iterate, adding all Long Count Dates between start and end
+        while (end.minus(occurrence) > 0)
+        {
+            // No need to copy, dates are immutable
+            dates.add(occurrence);
+
+            // Cycle forward
+            occurrence = occurrence.plus(cycle);
+        }
+
+        return dates;
     }
 }
