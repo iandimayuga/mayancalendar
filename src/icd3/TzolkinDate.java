@@ -188,8 +188,8 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     @Override
     public int toInt()
     {
-        // TODO Auto-generated method stub
-        return 0;
+        // Return the internal integer value
+        return m_value;
     }
 
     /*
@@ -200,7 +200,14 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     @Override
     public String toString()
     {
-        return null;
+        // Coefficient is 1-based
+        int digit = m_value % s_numCoefficients + 1;
+
+        // Day number corresponds to a day name in the static array
+        int dayNumber = m_value % s_dayNames.length;
+        String dayName = s_dayNames[dayNumber];
+
+        return String.format("%d.%s", digit, dayName);
     }
 
     /*
@@ -211,6 +218,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     @Override
     public boolean equals(Object o)
     {
-        return false;
+        // Must be non-null, also a TzolkinDate, and have the same integer representation
+        return o != null && o instanceof TzolkinDate && ((TzolkinDate)o).toInt() == this.toInt();
     }
 }
