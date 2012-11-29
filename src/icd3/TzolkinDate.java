@@ -141,7 +141,10 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      */
     public TzolkinDate(int value)
     {
+        int cycle = TzolkinDate.cycle();
 
+        // Ensure that value is within the positive equivalence class (mod cycle)
+        m_value = (value % cycle + cycle) % cycle;
     }
 
     /*
