@@ -3,6 +3,7 @@
  */
 package icd3;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -154,5 +155,15 @@ public class LongCountDate implements MayanDate<LongCountDate>
         }
 
         return new LongCountDate(total);
+    }
+
+    public static LongCountDate calendarRoundToLongCount(CalendarRoundDate calendarRound, int baktun)
+    {
+        return null;
+    }
+
+    public static List<LongCountDate> calendarRoundToLongCountList(CalendarRoundDate calendarRound, int baktunMin, int baktunMax)
+    {
+        return null;
     }
 }
