@@ -10,6 +10,12 @@ import java.util.regex.Pattern;
  */
 public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
 {
+    // Least common multiple of Tzolkin and Haab
+    private static final int s_cycle = 18980;
+
+    // Regular expression capture groups
+    private static final String s_tzolkinGroup = "tzolkin";
+    private static final String s_haabGroup = "haab";
 
     /**
      * Return a regular expression describing the string representation of a Calendar Round date. The string
@@ -19,7 +25,13 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
      */
     public static Pattern pattern()
     {
-        return null;
+        String tzolkinPattern = TzolkinDate.pattern().toString();
+        String haabPattern = HaabDate.pattern().toString();
+
+        String calendarRoundPattern = String.format("\\s*(?<%s>%s)\\s+(?<%s>%s)\\s*", s_tzolkinGroup, tzolkinPattern,
+                s_haabGroup, haabPattern);
+
+        return Pattern.compile(calendarRoundPattern, Pattern.CASE_INSENSITIVE);
     }
 
     /**

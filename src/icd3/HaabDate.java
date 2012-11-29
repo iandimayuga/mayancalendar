@@ -40,8 +40,8 @@ public class HaabDate implements MayanDate<HaabDate>
     private static final Pattern s_pattern = generatePattern(s_monthNames);
 
     // Regex capture group names
-    private static final String s_digitGroup = "digit";
-    private static final String s_monthGroup = "month";
+    private static final String s_digitGroup = "haabDigit";
+    private static final String s_monthGroup = "haabMonth";
 
     /**
      * Generate the lookup table given an array of month names.

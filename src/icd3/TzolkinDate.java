@@ -35,8 +35,8 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     private static final Pattern s_pattern = generatePattern(s_dayNames);
 
     // Regex capture group names
-    private static final String s_digitGroup = "digit";
-    private static final String s_dayGroup = "day";
+    private static final String s_digitGroup = "tzolkinDigit";
+    private static final String s_dayGroup = "tzolkinDay";
 
     /**
      * Generate the lookup table given an array of day names.
