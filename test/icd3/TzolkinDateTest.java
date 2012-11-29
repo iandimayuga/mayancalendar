@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package icd3;
 
@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ *
  */
 public class TzolkinDateTest
 {
@@ -28,7 +28,9 @@ public class TzolkinDateTest
     @Test
     public void testTzolkinDate()
     {
-        fail("Not yet implemented");
+        assertEquals(42, new TzolkinDate(42).toInt());
+        assertEquals(0, new TzolkinDate(260).toInt());
+        assertEquals(3, new TzolkinDate(-257).toInt());
     }
 
     /**
