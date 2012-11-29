@@ -54,6 +54,15 @@ public class LongCountDate implements MayanDate<LongCountDate>
         return this.toInt() - other.toInt();
     }
 
+    /**
+     * Get the baktun that this date is in.
+     * @return The number in the baktun place.
+     */
+    public int getBaktun()
+    {
+        return m_value / s_placeValues[4];
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -73,7 +82,31 @@ public class LongCountDate implements MayanDate<LongCountDate>
     @Override
     public String toString()
     {
-        return null;
+        StringBuilder builder = new StringBuilder();
+
+        // Running total value
+        int value = m_value;
+
+        // Separate out each place value, starting from highest order
+        for (int i = s_placeValues.length - 1; i >= 0; --i)
+        {
+            // Divide by the magnitude of the place value, and floor it (implicit)
+            int placeValue = value / s_placeValues[i];
+
+            // Subtract the amount from the running total
+            value -= placeValue;
+
+            // Append to the builder
+            builder.append(String.format("%d", placeValue));
+
+            // Do not place a dot after the last digit
+            if (i > 0)
+            {
+                builder.append(".");
+            }
+        }
+
+        return builder.toString();
     }
 
     /*
@@ -93,7 +126,7 @@ public class LongCountDate implements MayanDate<LongCountDate>
             "0*([0-9]|1[0-9])", "\\d+" };
 
     // The Calendar Round date corresponding to 0.0.0.0.0
-    private static String s_zeroDay = "4.ajaw 8.kumku";
+    private static CalendarRoundDate s_zeroDay = CalendarRoundDate.parse("4.ajaw 8.kumku");
 
     private static Pattern s_pattern = generatePattern(s_placeValueRegexes, s_placeNames);
 
