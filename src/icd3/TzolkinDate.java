@@ -5,10 +5,11 @@ package icd3;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents the Tzolkin method of Mayan calendaring.
+ * An immutable data structure that represents the Tzolkin method of Mayan calendaring.
  */
 public class TzolkinDate implements MayanDate<TzolkinDate>
 {
@@ -33,13 +34,23 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      */
     private static final Pattern s_pattern = generatePattern(s_dayNames);
 
+    // Regex capture group names
+    private static final String GROUP_DIGIT = "digit";
+    private static final String GROUP_DAY = "day";
+
+    /**
+     * Generate the lookup table given an array of day names.
+     * @param dayNames Array of day names.
+     * @return The lookup table.
+     */
     private static Map<String, Integer> generateNameTable(String[] dayNames)
     {
         // Initialize the lookup table
         Map<String, Integer> nameTable = new HashMap<>();
         for (int i = 0; i < dayNames.length; ++i)
         {
-            s_nameTable.put(dayNames[i], i);
+            // Keep everything lower case for case insensitivity
+            s_nameTable.put(dayNames[i].toLowerCase(), i);
         }
 
         return nameTable;
@@ -51,7 +62,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         StringBuilder patternBuilder = new StringBuilder();
 
         // Add the digit, dot, and begin capturing group for day name
-        patternBuilder.append("\\s*(?<digit>\\d)+\\s*\\.\\s*(?<day>");
+        patternBuilder.append(String.format("\\s*(?<%s>\\d)+\\s*\\.\\s*(?<%s>", GROUP_DIGIT, GROUP_DAY));
 
         // First name not preceded by a pipe "|"
         patternBuilder.append(dayNames[0]);
@@ -68,6 +79,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
 
     /**
      * Return a regular expression describing the string representation of a Tzolkin date.
+     *
      * @return A regular expression pattern that will match the allowed representations of this date type.
      */
     public static Pattern pattern()
@@ -76,20 +88,51 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     }
 
     /**
+     * Give the number of date representations possible in the Tzolkin system.
+     * @return The number of equivalence classes represented by Tzolkin dates.
+     */
+    public static int cycle()
+    {
+        // The cycle is the product of the two lengths, since they are mutually prime
+        return s_numCoefficients * s_dayNames.length;
+    }
+
+    /**
+     * Parse a string representation of a TzolkinDate.
+     *
+     * @param s A string matching TzolkinDate.pattern().
+     * @return A TzolkinDate object whose toString() will return an equivalent representation, or null if s does not
+     *         match.
+     */
+    public static TzolkinDate parse(String s)
+    {
+        // Attempt to match the input string
+        Matcher m = pattern().matcher(s);
+
+        // Return null if s does not match pattern
+        if (!m.matches())
+        {
+            return null;
+        }
+
+        // Extract capture groups
+        int digit = Integer.parseInt(m.group(GROUP_DIGIT));
+        String day = m.group(GROUP_DAY);
+
+        // The digit is one-based, but we use zero-based for multiplicative purposes
+        digit -= 1;
+
+        // Look up the day name with lower case for case insensitivity
+        int dayNumber = s_nameTable.get(day.toLowerCase());
+
+        // The integer representation is given by the multiplication of the two
+        return new TzolkinDate(digit * dayNumber);
+    }
+
+    /**
      * Integer representation of this date
      */
     private int m_value;
-
-    /**
-     * Instantiates a TzolkinDate object from its textual representation.
-     *
-     * @param text The textual representation. This must match exactly the regular expression returned by regex() in
-     *            order to be a valid object.
-     */
-    public TzolkinDate(String text)
-    {
-
-    }
 
     /**
      * Instantiates a TzolkinDate object from its integer representation.
