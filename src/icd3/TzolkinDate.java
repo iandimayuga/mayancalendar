@@ -230,7 +230,10 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         // Look up the day name with lower case for case insensitivity
         int dayNumber = s_nameTable.get(day.toLowerCase());
 
-        // The integer representation is given by the multiplication of the two
-        return new TzolkinDate(digit * dayNumber);
+        // The integer representation is given by finding the position in the cycle
+        int positionInCycle = (digit - dayNumber) * 2 % s_numCoefficients;
+
+        // And then adding the total number of cycles
+        return new TzolkinDate(positionInCycle * s_dayNames.length + dayNumber);
     }
 }
