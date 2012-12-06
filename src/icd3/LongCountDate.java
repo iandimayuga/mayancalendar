@@ -5,8 +5,6 @@ package icd3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * An immutable data structure representing the Mayan Long Count absolute date.

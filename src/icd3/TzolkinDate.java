@@ -3,11 +3,6 @@
  */
 package icd3;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * An immutable data structure that represents the Tzolkin method of Mayan calendaring.
  */
