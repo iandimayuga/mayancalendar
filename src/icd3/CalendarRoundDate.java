@@ -24,7 +24,16 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
      */
     public CalendarRoundDate(TzolkinDate tzolkin, HaabDate haab)
     {
-        this(tzolkin.toInt() * haab.toInt());
+        int haabCycle = HaabDate.cycle();
+
+        int tzolkinValue = tzolkin.toInt();
+        int haabValue = haab.toInt();
+
+        // The integer representation is given by finding the position in the cycle
+        int numberOfHaabs = (tzolkinValue - haabValue) % 52;
+
+        // And then adding the total number of cycles
+        this.initialize(numberOfHaabs * haabCycle + haabValue);
     }
 
     /**
@@ -33,6 +42,11 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
      * @param value The integer representation.
      */
     public CalendarRoundDate(int value)
+    {
+        this.initialize(value);
+    }
+
+    private void initialize(int value)
     {
         int cycle = CalendarRoundDate.cycle();
 
@@ -131,40 +145,6 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
     // Least common multiple of Tzolkin and Haab
     private static final int s_cycle = 18980;
 
-    // Regular expression capture groups
-    private static final String s_tzolkinGroup = "tzolkin";
-    private static final String s_haabGroup = "haab";
-
-    private static final Pattern s_pattern = generatePattern();
-
-    /**
-     * Generate the regex pattern to match Calendar Round dates.
-     *
-     * @param dayNames The named days in the Calendar Round system.
-     * @return A pattern that will match Calendar Round dates (case and whitespace insensitive).
-     */
-    private static Pattern generatePattern()
-    {
-        String tzolkinPattern = TzolkinDate.pattern().toString();
-        String haabPattern = HaabDate.pattern().toString();
-
-        String calendarRoundPattern = String.format("\\s*(?<%s>%s)\\s+(?<%s>%s)\\s*", s_tzolkinGroup, tzolkinPattern,
-                s_haabGroup, haabPattern);
-
-        return Pattern.compile(calendarRoundPattern, Pattern.CASE_INSENSITIVE);
-    }
-
-    /**
-     * Return a regular expression describing the string representation of a Calendar Round date. The string
-     * representation is case and whitespace insensitive.
-     *
-     * @return A regular expression pattern that will match the allowed representations of this date type.
-     */
-    public static Pattern pattern()
-    {
-        return s_pattern;
-    }
-
     /**
      * Give the number of date representations possible in the Calendar Round system.
      *
@@ -173,39 +153,5 @@ public class CalendarRoundDate implements MayanDate<CalendarRoundDate>
     public static int cycle()
     {
         return s_cycle;
-    }
-
-    /**
-     * Parse a string representation of a Calendar Round Date.
-     *
-     * @param s A string matching CalendarRoundDate.pattern().
-     * @return A CalendarRoundDate object whose toString() will return an equivalent representation, or null if s does
-     *         not match.
-     */
-    public static CalendarRoundDate parse(String s)
-    {
-        // Attempt to match the input string
-        Matcher m = pattern().matcher(s);
-
-        // Return null if s does not match pattern
-        if (!m.matches())
-        {
-            return null;
-        }
-
-        // Extract capture groups
-        String tzolkinPart = m.group(s_tzolkinGroup);
-        String haabPart = m.group(s_haabGroup);
-
-        // Parse each component
-        TzolkinDate tzolkin = TzolkinDate.parse(tzolkinPart);
-        HaabDate haab = HaabDate.parse(haabPart);
-
-        // Neither should be null, since the capture groups are based on their own patterns
-        assert(tzolkin != null);
-        assert(haab != null);
-
-        // Instantiate Calendar Round from components
-        return new CalendarRoundDate(tzolkin, haab);
     }
 }

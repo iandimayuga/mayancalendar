@@ -18,12 +18,35 @@ public class HaabDate implements MayanDate<HaabDate>
      */
     private int m_value;
 
+    private int m_day;
+
+    private Month m_month;
+
+    public HaabDate(int numeral, Month month)
+    {
+        // Numeral is 1-based, store 0-based
+        int day = numeral - 1;
+
+        m_month = month;
+        m_day = Math.min(Math.max(0, day), month.days());
+
+        this.initialize(m_month.daysBefore() + m_day);
+    }
+
     /**
      * Instantiates a HaabDate object from its integer representation.
      *
      * @param value The integer representation.
      */
     public HaabDate(int value)
+    {
+        this.initialize(value);
+
+        m_month = Month.values()[m_value / s_daysPerMonth];
+        m_day = value - m_month.daysBefore();
+    }
+
+    private void initialize(int value)
     {
         int cycle = HaabDate.cycle();
 
@@ -84,14 +107,7 @@ public class HaabDate implements MayanDate<HaabDate>
     @Override
     public String toString()
     {
-        // Month number corresponds to a month name in the static array
-        int monthNumber = m_value / s_daysPerMonth;
-        String monthName = s_monthNames[monthNumber];
-
-        // Day number is the remainder + 1
-        int dayNumber = m_value % s_daysPerMonth + 1;
-
-        return String.format("%d.%s", dayNumber, monthName);
+        return String.format("%d.%s", getNumeral(), getMonth());
     }
 
     /*
@@ -107,98 +123,85 @@ public class HaabDate implements MayanDate<HaabDate>
     }
 
     /**
+     * Gets the 1-based numeral in the Haab representation.
+     *
+     * @return The numeral
+     */
+    public int getNumeral()
+    {
+        // Return the 1-based numeral
+        return m_day + 1;
+    }
+
+    /**
+     * Gets the named month in the Haab representation.
+     *
+     * @return The month name.
+     */
+    public Month getMonth()
+    {
+        return m_month;
+    }
+
+    public enum Month
+    {
+        POHP,
+        WO,
+        SIP,
+        ZOTZ,
+        SEK,
+        XUL,
+        YAXKIN,
+        MOL,
+        CHEN,
+        YAX,
+        SAK,
+        KEH,
+        MAK,
+        KANKIN,
+        MUAN,
+        PAX,
+        KAYAB,
+        KUMKU,
+        WAYEB(5);
+
+        private int m_days;
+
+        private Month()
+        {
+            this(s_daysPerMonth);
+        }
+
+        private Month(int days)
+        {
+            m_days = days;
+        }
+
+        public int days()
+        {
+            return m_days;
+        }
+
+        /**
+         * The number of days in the year prior to this month.
+         *
+         * @return The number of days prior to this month. Also, the "index" of the beginning of the month.
+         */
+        public int daysBefore()
+        {
+            return s_daysPerMonth * this.ordinal();
+        }
+    }
+
+    /**
      * The length of the months in the first 360 days of the Haab calendar.
      */
     private static final int s_daysPerMonth = 20;
 
     /**
-     * The month names in a Haab date.
-     */
-    private static final String[] s_monthNames = { "pohp", "wo", "sip", "zotz", "sek", "xul", "yaxkin", "mol", "chen",
-            "yax", "sak", "keh", "mak", "kankin", "muan", "pax", "kayab", "kumku", "wayeb" };
-
-    /**
      * The number of days in a year. Note that 20 * 19 > 365
      */
     private static final int s_daysPerYear = 365;
-
-    /**
-     * Lookup table for month name representations
-     */
-    private static final Map<String, Integer> s_nameTable = generateNameTable(s_monthNames);
-
-    /**
-     * Regular expression for this date representation
-     */
-    private static final Pattern s_pattern = generatePattern(s_monthNames);
-
-    // Regex capture group names
-    private static final String s_digitGroup = "haabDigit";
-    private static final String s_monthGroup = "haabMonth";
-    private static final String s_wayebDigitGroup = "haabWayebDigit";
-    private static final String s_wayebMonthGroup = "haabWayebMonth";
-
-    /**
-     * Generate the lookup table given an array of month names.
-     *
-     * @param monthNames Array of month names.
-     * @return The lookup table.
-     */
-    private static Map<String, Integer> generateNameTable(String[] monthNames)
-    {
-        // Initialize the lookup table
-        Map<String, Integer> nameTable = new HashMap<>();
-        for (int i = 0; i < monthNames.length; ++i)
-        {
-            // Keep everything lower case for case insensitivity
-            nameTable.put(monthNames[i].toLowerCase(), i);
-        }
-
-        return nameTable;
-    }
-
-    /**
-     * Generate the regex pattern to match Haab dates.
-     *
-     * @param dayNames The named days in the Haab system.
-     * @return A pattern that will match Haab dates (case and whitespace insensitive).
-     */
-    private static Pattern generatePattern(String[] monthNames)
-    {
-        // Build the regex string dynamically
-        StringBuilder patternBuilder = new StringBuilder();
-
-        // Add the digit, dot, and begin capturing group for month name
-        patternBuilder.append(String.format("(\\s*(?<%s>0*([1-9]|1[0-9]|20))\\s*\\.\\s*(?<%s>", s_digitGroup,
-                s_monthGroup));
-
-        // First name not preceded by a pipe "|"
-        patternBuilder.append(monthNames[0]);
-
-        // Loop through remaining names excluding the last month
-        for (int i = 1; i < monthNames.length - 1; ++i)
-        {
-            patternBuilder.append(String.format("|%s", monthNames[i]));
-        }
-
-        // Append the special case for the last month
-        patternBuilder.append(String.format(")\\s*)|(\\s*(?<%s>0*[1-5])\\s*\\.\\s*(?<%s>%s)\\s*)", s_wayebDigitGroup,
-                s_wayebMonthGroup, monthNames[monthNames.length - 1]));
-
-        // Compile the pattern from the generated regex, with case insensitivity
-        return Pattern.compile(patternBuilder.toString(), Pattern.CASE_INSENSITIVE);
-    }
-
-    /**
-     * Return a regular expression describing the string representation of a Haab date. The string representation is
-     * case and whitespace insensitive.
-     *
-     * @return A regular expression pattern that will match the allowed representations of this date type.
-     */
-    public static Pattern pattern()
-    {
-        return s_pattern;
-    }
 
     /**
      * Give the number of date representations possible in the Haab system.
@@ -209,47 +212,5 @@ public class HaabDate implements MayanDate<HaabDate>
     {
         // The cycle is the year length
         return s_daysPerYear;
-    }
-
-    /**
-     * Parse a string representation of a HaabDate.
-     *
-     * @param s A string matching HaabDate.pattern().
-     * @return A HaabDate object whose toString() will return an equivalent representation, or null if s does not match.
-     */
-    public static HaabDate parse(String s)
-    {
-        // Attempt to match the input string
-        Matcher m = pattern().matcher(s);
-
-        // Return null if s does not match pattern
-        if (!m.matches())
-        {
-            return null;
-        }
-
-        String day = m.group(s_digitGroup);
-        if (null == day)
-        {
-            day = m.group(s_wayebDigitGroup);
-        }
-
-        String month = m.group(s_monthGroup);
-        if (null == month)
-        {
-            month = m.group(s_wayebMonthGroup);
-        }
-
-        // Extract capture groups
-        int dayNumber = Integer.parseInt(day);
-
-        // The digit is one-based, but we use zero-based for multiplicative purposes
-        dayNumber -= 1;
-
-        // Look up the month name with lower case for case insensitivity
-        int monthNumber = s_nameTable.get(month.toLowerCase());
-
-        // The integer representation is given by month * daysPerMonth + day
-        return new HaabDate(monthNumber * s_daysPerMonth + dayNumber);
     }
 }

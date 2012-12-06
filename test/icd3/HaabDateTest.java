@@ -62,10 +62,10 @@ public class HaabDateTest
     @Test
     public void testToString()
     {
-        assertEquals("1.pohp", new HaabDate(0).toString());
-        assertEquals("2.pohp", new HaabDate(1).toString());
-        assertEquals("1.wo", new HaabDate(20).toString());
-        assertEquals("5.wo", new HaabDate(24).toString());
+        assertEquals("1.POHP", new HaabDate(0).toString());
+        assertEquals("2.POHP", new HaabDate(1).toString());
+        assertEquals("1.WO", new HaabDate(20).toString());
+        assertEquals("5.WO", new HaabDate(24).toString());
     }
 
     /**
@@ -75,20 +75,8 @@ public class HaabDateTest
     public void testEqualsObject()
     {
         assertEquals(new HaabDate(0), new HaabDate(0));
-        assertEquals(new HaabDate(24), HaabDate.parse("5.wo"));
-        assertEquals(new HaabDate(1), HaabDate.parse("2.pohp"));
-        assertEquals(new HaabDate(364), HaabDate.parse("5.wayeb"));
+        assertEquals(new HaabDate(24), new HaabDate(5, HaabDate.Month.WO));
+        assertEquals(new HaabDate(1), new HaabDate(2, HaabDate.Month.POHP));
+        assertEquals(new HaabDate(364), new HaabDate(5, HaabDate.Month.WAYEB));
     }
-
-    /**
-     * Test method for {@link icd3.HaabDate#parse(java.lang.String)}.
-     */
-    @Test
-    public void testParse()
-    {
-        assertEquals(new HaabDate(0), new HaabDate(0));
-        assertEquals(new HaabDate(24), HaabDate.parse(" 5 . wo "));
-        assertEquals(new HaabDate(1), HaabDate.parse("02.pOhp"));
-    }
-
 }

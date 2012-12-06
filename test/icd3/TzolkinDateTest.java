@@ -78,17 +78,4 @@ public class TzolkinDateTest
         assertEquals(new TzolkinDate(24), new TzolkinDate(12, TzolkinDate.Day.CHIKCHAN));
         assertEquals(new TzolkinDate(148), new TzolkinDate(6, TzolkinDate.Day.MULUK));
     }
-
-    /**
-     * Test method for {@link icd3.TzolkinDate#parse(java.lang.String)}.
-     */
-    @Test
-    public void testParse()
-    {
-        assertEquals(new TzolkinDate(0), new TzolkinDate(0));
-        assertEquals(new TzolkinDate(44), TzolkinDate.parse("006.chiKChan"));
-        assertEquals(new TzolkinDate(243), TzolkinDate.parse(" 10 . kan "));
-        assertEquals("6.KAN", TzolkinDate.parse("6.kan").toString());
-    }
-
 }

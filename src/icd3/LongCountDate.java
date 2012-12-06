@@ -122,75 +122,9 @@ public class LongCountDate implements MayanDate<LongCountDate>
         return o != null && o instanceof LongCountDate && ((LongCountDate) o).toInt() == this.toInt();
     }
 
-    private static int[] s_placeValues = { 1, 20, 360, 7200, 144000 };
-    private static String[] s_placeNames = { "kin", "winal", "tun", "katun", "baktun" };
-    private static String[] s_placeValueRegexes = { "0*([0-9]|1[0-9])", "0*([0-9]|1[0-7])", "0*([0-9]|1[0-9])",
-            "0*([0-9]|1[0-9])", "\\d+" };
-
     // The Calendar Round date corresponding to 0.0.0.0.0
-    private static CalendarRoundDate s_zeroDay = CalendarRoundDate.parse("4.ajaw 8.kumku");
-
-    private static Pattern s_pattern = generatePattern(s_placeValueRegexes, s_placeNames);
-
-    private static Pattern generatePattern(String[] placeValueRegexes, String[] placeNames)
-    {
-        StringBuilder patternBuilder = new StringBuilder();
-
-        patternBuilder.append("\\s*");
-
-        for (int i = s_placeValueRegexes.length - 1; i >= 0; --i)
-        {
-            patternBuilder.append(String.format("(?<%s>%s)\\s*", placeNames[i], placeValueRegexes[i]));
-
-            // Dots only go in between places
-            if (i > 0)
-            {
-                patternBuilder.append("\\.\\s*");
-            }
-        }
-
-        return Pattern.compile(patternBuilder.toString());
-    }
-
-    /**
-     * Return a regular expression describing the string representation of a Mayan Long Count date. The string
-     * representation is whitespace insensitive.
-     *
-     * @return A regular expression pattern that will match the allowed representations of this date type.
-     */
-    public static Pattern pattern()
-    {
-        return s_pattern;
-    }
-
-    /**
-     * Parse a string representation of a Long Count Date.
-     *
-     * @param s A string matching LongCountDate.pattern().
-     * @return A LongCountDate object whose toString() will return an equivalent representation, or null if s does not
-     *         match.
-     */
-    public static LongCountDate parse(String s)
-    {
-        // Attempt to match the input string
-        Matcher m = pattern().matcher(s);
-
-        // Return null if s does not match pattern
-        if (!m.matches())
-        {
-            return null;
-        }
-
-        int total = 0;
-
-        for (int i = 0; i < s_placeNames.length; ++i)
-        {
-            // Multiply each place number by its corresponding place value and add to the total
-            total += Integer.parseInt(m.group(s_placeNames[i])) * s_placeValues[i];
-        }
-
-        return new LongCountDate(total);
-    }
+    private static CalendarRoundDate s_zeroDay = new CalendarRoundDate(new TzolkinDate(4, TzolkinDate.Day.AJAW),
+            new HaabDate(8, HaabDate.Month.KUMKU));
 
     /**
      * Return the first Long Count date represented by a Calendar Round date after the specified date.
