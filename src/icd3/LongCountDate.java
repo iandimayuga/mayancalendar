@@ -17,6 +17,36 @@ public class LongCountDate implements MayanDate<LongCountDate>
     private int m_value;
 
     /**
+     * Place value-separated representation
+     */
+    private int[] m_periods;
+
+    /**
+     * Instantiates a LongCountDate object from its representation separated into place values.
+     * Negatives are not permitted and will be interpreted as zero.
+     *
+     * @param placeValues
+     */
+    public LongCountDate(Integer... placeValues)
+    {
+        int value = 0;
+
+        Period[] periods = Period.values();
+
+        // Multiply out the input values to get the raw number of days, to be robust
+        for (int i = 0; i < periods.length; ++i)
+        {
+            if (i < placeValues.length && placeValues[i] != null && placeValues[i] > 0)
+            {
+                value += placeValues[i] * periods[i].days();
+            }
+        }
+
+        // Let initialize store the value and the place values in the right quantities
+        this.initialize(value);
+    }
+
+    /**
      * Instantiates a LongCountDate object from its integer representation. Negatives are not permitted and will be
      * interpreted as zero.
      *
@@ -24,7 +54,28 @@ public class LongCountDate implements MayanDate<LongCountDate>
      */
     public LongCountDate(int value)
     {
+        this.initialize(value);
+    }
+
+    private void initialize(int value)
+    {
+        // Clamp the value to be non-negative
         m_value = value < 0 ? 0 : value;
+
+        Period[] periods = Period.values();
+
+        m_periods = new int[periods.length];
+
+        for (int i = periods.length - 1; i >= 0; --i)
+        {
+            // Divide by the magnitude of the place value, and floor it (implicit)
+            int placeValue = value / periods[i].days();
+
+            // Subtract the amount from the running total
+            value -= placeValue;
+
+            m_periods[i] = placeValue;
+        }
     }
 
     /*
@@ -54,13 +105,13 @@ public class LongCountDate implements MayanDate<LongCountDate>
     }
 
     /**
-     * Get the baktun that this date is in.
+     * Get the place value of a specified period.
      *
-     * @return The number in the baktun place.
+     * @return The number in the specified place.
      */
-    public int getBaktun()
+    public int getValue(Period period)
     {
-        return m_value / s_placeValues[s_placeValues.length - 1];
+        return m_periods[period.ordinal()];
     }
 
     /*
@@ -84,20 +135,10 @@ public class LongCountDate implements MayanDate<LongCountDate>
     {
         StringBuilder builder = new StringBuilder();
 
-        // Running total value
-        int value = m_value;
-
-        // Separate out each place value, starting from highest order
-        for (int i = s_placeValues.length - 1; i >= 0; --i)
+        for (int i = m_periods.length - 1; i > 0; --i)
         {
-            // Divide by the magnitude of the place value, and floor it (implicit)
-            int placeValue = value / s_placeValues[i];
-
-            // Subtract the amount from the running total
-            value -= placeValue;
-
             // Append to the builder
-            builder.append(String.format("%d", placeValue));
+            builder.append(String.format("%d", m_periods[i]));
 
             // Do not place a dot after the last digit
             if (i > 0)
@@ -158,10 +199,15 @@ public class LongCountDate implements MayanDate<LongCountDate>
                                                                    LongCountDate start,
                                                                    LongCountDate end)
     {
+        if (null == calendarRound || null == start || null == end)
+        {
+            throw new NullPointerException("Date parameters must not be null.");
+        }
+
         List<LongCountDate> dates = new ArrayList<LongCountDate>();
 
         // Get the length of the Calendar Round
-        int cycle = CalendarRoundDate.cycle();
+        int cycle = calendarRound.cycle();
 
         // Find the first occurrence at or after start
         LongCountDate occurrence = calendarRoundToLongCount(calendarRound, start);
@@ -177,5 +223,26 @@ public class LongCountDate implements MayanDate<LongCountDate>
         }
 
         return dates;
+    }
+
+    public enum Period
+    {
+        KIN(1),
+        WINAL(20),
+        TUN(360),
+        KATUN(7200),
+        BAKTUN(144000);
+
+        private int m_days;
+
+        private Period(int days)
+        {
+            m_days = days;
+        }
+
+        public int days()
+        {
+            return m_days;
+        }
     }
 }
