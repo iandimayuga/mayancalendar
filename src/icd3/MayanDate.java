@@ -8,7 +8,7 @@ package icd3;
  *
  * The date representation is only comparable with other date representations of the same type.
  */
-public interface MayanDate<T>
+public interface MayanDate<T extends MayanDate<T>>
 {
     /**
      * Calculate a certain number of days away from this date.
