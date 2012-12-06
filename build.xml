@@ -10,6 +10,8 @@
   <property name="lib" value="." />
   <property name="tzolkinTest.class.name" value="icd3.TzolkinDateTest" />
   <property name="haabTest.class.name" value="icd3.HaabDateTest" />
+  <property name="calendarRoundTest.class.name" value="icd3.CalendarRoundDateTest" />
+  <property name="longCountTest.class.name" value="icd3.LongCountDateTest" />
 
   <path id="test.classpath">
     <pathelement location="bin" />
@@ -33,4 +35,22 @@
       <classpath refid="test.classpath" />
     </junit>
   </target>
+
+  <target name="calendarRoundTest">
+    <junit fork="yes" haltonfailure="yes">
+      <test name="${calendarRoundTest.class.name}" />
+      <formatter type="plain" usefile="false" />
+      <classpath refid="test.classpath" />
+    </junit>
+  </target>
+
+  <target name="longCountTest">
+    <junit fork="yes" haltonfailure="yes">
+      <test name="${longCountTest.class.name}" />
+      <formatter type="plain" usefile="false" />
+      <classpath refid="test.classpath" />
+    </junit>
+  </target>
+
+  <target name="test" depends="tzolkinTest, haabTest, calendarRoundTest, longCountTest"/>
 </project>
