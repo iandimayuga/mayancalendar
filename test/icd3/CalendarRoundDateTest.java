@@ -47,7 +47,9 @@ public class CalendarRoundDateTest
     @Test
     public void testPlus()
     {
-        assertEquals(CalendarRoundDate.parse("6.kan 2.kayab"), CalendarRoundDate.parse("3.lamat 6.pax").plus(16));
+        assertEquals(new CalendarRoundDate(new TzolkinDate(6, TzolkinDate.Day.KAN), new HaabDate(2,
+                HaabDate.Month.KAYAB)), new CalendarRoundDate(new TzolkinDate(3, TzolkinDate.Day.LAMAT), new HaabDate(
+                6, HaabDate.Month.PAX)).plus(16));
     }
 
     /**
@@ -103,32 +105,4 @@ public class CalendarRoundDateTest
     {
         fail("Not yet implemented");
     }
-
-    /**
-     * Test method for {@link icd3.CalendarRoundDate#pattern()}.
-     */
-    @Test
-    public void testPattern()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.CalendarRoundDate#cycle()}.
-     */
-    @Test
-    public void testCycle()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.CalendarRoundDate#parse(java.lang.String)}.
-     */
-    @Test
-    public void testParse()
-    {
-        assertEquals("6.kan 2.kayab", CalendarRoundDate.parse("6.kan 2.kayab").toString());
-    }
-
 }
