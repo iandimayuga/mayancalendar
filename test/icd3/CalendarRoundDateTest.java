@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package icd3;
 
@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ *
  */
 public class CalendarRoundDateTest
 {
@@ -28,7 +28,8 @@ public class CalendarRoundDateTest
     @Test
     public void testCalendarRoundDateTzolkinDateHaabDate()
     {
-        fail("Not yet implemented");
+        assertEquals(0, new CalendarRoundDate(new TzolkinDate(0), new HaabDate(0)).toInt());
+        assertEquals(42, new CalendarRoundDate(new TzolkinDate(42), new HaabDate(42)).toInt());
     }
 
     /**
@@ -46,7 +47,7 @@ public class CalendarRoundDateTest
     @Test
     public void testPlus()
     {
-        fail("Not yet implemented");
+        assertEquals(CalendarRoundDate.parse("6.kan 2.kayab"), CalendarRoundDate.parse("3.lamat 6.pax").plus(16));
     }
 
     /**
@@ -127,7 +128,7 @@ public class CalendarRoundDateTest
     @Test
     public void testParse()
     {
-        fail("Not yet implemented");
+        assertEquals("6.kan 2.kayab", CalendarRoundDate.parse("6.kan 2.kayab").toString());
     }
 
 }

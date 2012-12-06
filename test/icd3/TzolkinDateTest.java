@@ -88,6 +88,7 @@ public class TzolkinDateTest
         assertEquals(new TzolkinDate(0), new TzolkinDate(0));
         assertEquals(new TzolkinDate(44), TzolkinDate.parse("006.chiKChan"));
         assertEquals(new TzolkinDate(243), TzolkinDate.parse(" 10 . kan "));
+        assertEquals("6.kan", TzolkinDate.parse("6.kan").toString());
     }
 
 }
