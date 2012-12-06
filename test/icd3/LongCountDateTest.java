@@ -92,12 +92,6 @@ public class LongCountDateTest
         CalendarRoundDate cr = new CalendarRoundDate(t, h);
         assertEquals(new LongCountDate(0, 0, 0, 0, 8),
                 LongCountDate.calendarRoundToLongCount(cr, new LongCountDate(0, 0, 0, 0, 8)));
-
-        TzolkinDate t2 = new TzolkinDate(3, TzolkinDate.Day.LAMAT);
-        HaabDate h2 = new HaabDate(6, HaabDate.Month.PAX);
-        CalendarRoundDate cr2 = new CalendarRoundDate(t2, h2);
-        assertEquals(new LongCountDate(8, 17, 17, 0, 8), LongCountDate.calendarRoundToLongCount(cr2,
-                new LongCountDate(0, 0, 0, 0, 8)));
     }
 
     /**
@@ -108,11 +102,11 @@ public class LongCountDateTest
     @Test
     public void testCalendarRoundToLongCountList()
     {
-        TzolkinDate t = new TzolkinDate(3, TzolkinDate.Day.LAMAT);
-        HaabDate h = new HaabDate(6, HaabDate.Month.PAX);
+        TzolkinDate t = new TzolkinDate(9, TzolkinDate.Day.AJAW);
+        HaabDate h = new HaabDate(3, HaabDate.Month.SIP);
         CalendarRoundDate cr = new CalendarRoundDate(t, h);
-        assertEquals(new LongCountDate(8, 17, 17, 0, 8), LongCountDate.calendarRoundToLongCountList(cr,
-                new LongCountDate(0, 0, 0, 0, 8), new LongCountDate(0, 0, 0, 0, 10)).get(0));
+        assertEquals(new LongCountDate(0, 13, 12, 2, 8),
+                LongCountDate.calendarRoundToLongCountList(cr, new LongCountDate(0, 0, 0, 0, 8), new LongCountDate(0,0,0,0,10)).get(1));
     }
 
 }
