@@ -43,7 +43,7 @@ public abstract class CyclicDate<T extends CyclicDate<T>> implements MayanDate<T
     {
         if (null == other)
         {
-            throw new NullPointerException("Cannot subtract a null Haab Date");
+            throw new NullPointerException("Cannot subtract a null MayanDate");
         }
 
         // Subtract the integer representations
