@@ -91,6 +91,9 @@ public class HaabDate extends CyclicDate<HaabDate>
         return m_month;
     }
 
+    /**
+     * The names and order of the months in the Haab system of Mayan calendaring.
+     */
     public enum Month
     {
         POHP,

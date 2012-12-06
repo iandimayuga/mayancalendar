@@ -101,6 +101,9 @@ public class TzolkinDate extends CyclicDate<TzolkinDate>
         return m_day;
     }
 
+    /**
+     * The names and order of the days in the Tzolkin system of Mayan calendaring
+     */
     public enum Day
     {
         IMIX,

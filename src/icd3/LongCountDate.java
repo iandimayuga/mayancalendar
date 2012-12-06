@@ -109,7 +109,7 @@ public class LongCountDate implements MayanDate<LongCountDate>
      *
      * @return The number in the specified place.
      */
-    public int getValue(Period period)
+    public int getPeriod(Period period)
     {
         return m_periods[period.ordinal()];
     }
@@ -225,6 +225,9 @@ public class LongCountDate implements MayanDate<LongCountDate>
         return dates;
     }
 
+    /**
+     * The periods used in the Mesoamerican Long Count Calendar, and their lengths in days.
+     */
     public enum Period
     {
         KIN(1),
