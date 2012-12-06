@@ -22,10 +22,10 @@ public class LongCountDate implements MayanDate<LongCountDate>
     private int[] m_periods;
 
     /**
-     * Instantiates a LongCountDate object from its representation separated into place values.
-     * Negatives are not permitted and will be interpreted as zero.
+     * Instantiates a LongCountDate object from its representation separated into place values starting with the single
+     * day unit. Negatives are not permitted and will be interpreted as zero.
      *
-     * @param placeValues
+     * @param placeValues A list of place values from least significant to most significant.
      */
     public LongCountDate(Integer... placeValues)
     {
@@ -72,7 +72,7 @@ public class LongCountDate implements MayanDate<LongCountDate>
             int placeValue = value / periods[i].days();
 
             // Subtract the amount from the running total
-            value -= placeValue;
+            value -= placeValue * periods[i].days();
 
             m_periods[i] = placeValue;
         }
@@ -135,7 +135,7 @@ public class LongCountDate implements MayanDate<LongCountDate>
     {
         StringBuilder builder = new StringBuilder();
 
-        for (int i = m_periods.length - 1; i > 0; --i)
+        for (int i = m_periods.length - 1; i >= 0; --i)
         {
             // Append to the builder
             builder.append(String.format("%d", m_periods[i]));
@@ -158,7 +158,7 @@ public class LongCountDate implements MayanDate<LongCountDate>
     @Override
     public boolean equals(Object o)
     {
-        return o != null && o instanceof LongCountDate && ((LongCountDate) o).toInt() == this.toInt();
+        return o != null && this.getClass().equals(o.getClass()) && this.toInt() == ((LongCountDate) o).toInt();
     }
 
     // The Calendar Round date corresponding to 0.0.0.0.0

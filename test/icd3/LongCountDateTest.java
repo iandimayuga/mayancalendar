@@ -1,15 +1,15 @@
 /**
- * 
+ *
  */
 package icd3;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ *
  */
 public class LongCountDateTest
 {
@@ -23,21 +23,12 @@ public class LongCountDateTest
     }
 
     /**
-     * Test method for {@link icd3.LongCountDate#LongCountDate(int)}.
-     */
-    @Test
-    public void testLongCountDate()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
      * Test method for {@link icd3.LongCountDate#plus(int)}.
      */
     @Test
     public void testPlus()
     {
-        fail("Not yet implemented");
+        assertEquals(new LongCountDate(5, 4, 3, 2, 9), new LongCountDate(0, 3, 3, 2, 9).plus(25));
     }
 
     /**
@@ -46,16 +37,21 @@ public class LongCountDateTest
     @Test
     public void testMinus()
     {
-        fail("Not yet implemented");
+        assertEquals(25, new LongCountDate(5, 4, 3, 2, 9).minus(new LongCountDate(0, 3, 3, 2, 9)));
     }
 
     /**
-     * Test method for {@link icd3.LongCountDate#getBaktun()}.
+     * Test method for {@link icd3.LongCountDate#getPeriod()}.
      */
     @Test
-    public void testGetBaktun()
+    public void testGetPeriod()
     {
-        fail("Not yet implemented");
+        LongCountDate date = new LongCountDate(1, 2, 3, 4, 8);
+        assertEquals(1, date.getPeriod(LongCountDate.Period.KIN));
+        assertEquals(2, date.getPeriod(LongCountDate.Period.WINAL));
+        assertEquals(3, date.getPeriod(LongCountDate.Period.TUN));
+        assertEquals(4, date.getPeriod(LongCountDate.Period.KATUN));
+        assertEquals(8, date.getPeriod(LongCountDate.Period.BAKTUN));
     }
 
     /**
@@ -64,7 +60,7 @@ public class LongCountDateTest
     @Test
     public void testToInt()
     {
-        fail("Not yet implemented");
+        assertEquals(0, new LongCountDate(0).toInt());
     }
 
     /**
@@ -73,7 +69,7 @@ public class LongCountDateTest
     @Test
     public void testToString()
     {
-        fail("Not yet implemented");
+        assertEquals("8.4.3.2.1", new LongCountDate(1, 2, 3, 4, 8).toString());
     }
 
     /**
@@ -82,25 +78,7 @@ public class LongCountDateTest
     @Test
     public void testEqualsObject()
     {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.LongCountDate#pattern()}.
-     */
-    @Test
-    public void testPattern()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.LongCountDate#parse(java.lang.String)}.
-     */
-    @Test
-    public void testParse()
-    {
-        fail("Not yet implemented");
+        assertEquals(new LongCountDate(0), new LongCountDate(0, 0, 0, 0, 0));
     }
 
     /**
@@ -109,16 +87,32 @@ public class LongCountDateTest
     @Test
     public void testCalendarRoundToLongCount()
     {
-        fail("Not yet implemented");
+        TzolkinDate t = new TzolkinDate(9, TzolkinDate.Day.AJAW);
+        HaabDate h = new HaabDate(3, HaabDate.Month.SIP);
+        CalendarRoundDate cr = new CalendarRoundDate(t, h);
+        assertEquals(new LongCountDate(0, 0, 0, 0, 8),
+                LongCountDate.calendarRoundToLongCount(cr, new LongCountDate(0, 0, 0, 0, 8)));
+
+        TzolkinDate t2 = new TzolkinDate(3, TzolkinDate.Day.LAMAT);
+        HaabDate h2 = new HaabDate(6, HaabDate.Month.PAX);
+        CalendarRoundDate cr2 = new CalendarRoundDate(t2, h2);
+        assertEquals(new LongCountDate(8, 17, 17, 0, 8), LongCountDate.calendarRoundToLongCount(cr2,
+                new LongCountDate(0, 0, 0, 0, 8)));
     }
 
     /**
-     * Test method for {@link icd3.LongCountDate#calendarRoundToLongCountList(icd3.CalendarRoundDate, icd3.LongCountDate, icd3.LongCountDate)}.
+     * Test method for
+     * {@link icd3.LongCountDate#calendarRoundToLongCountList(icd3.CalendarRoundDate, icd3.LongCountDate, icd3.LongCountDate)}
+     * .
      */
     @Test
     public void testCalendarRoundToLongCountList()
     {
-        fail("Not yet implemented");
+        TzolkinDate t = new TzolkinDate(3, TzolkinDate.Day.LAMAT);
+        HaabDate h = new HaabDate(6, HaabDate.Month.PAX);
+        CalendarRoundDate cr = new CalendarRoundDate(t, h);
+        assertEquals(new LongCountDate(8, 17, 17, 0, 8), LongCountDate.calendarRoundToLongCountList(cr,
+                new LongCountDate(0, 0, 0, 0, 8), new LongCountDate(0, 0, 0, 0, 10)).get(0));
     }
 
 }
