@@ -6,7 +6,7 @@ package icd3;
 /**
  * An immutable data structure that represents the Tzolkin method of Mayan calendaring.
  */
-public class TzolkinDate implements MayanDate<TzolkinDate>
+public class TzolkinDate extends CyclicDate<TzolkinDate>
 {
     /**
      * The coefficient of this date (zero-based)
@@ -19,11 +19,6 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     private Day m_day;
 
     /**
-     * The integer representation of this date
-     */
-    private int m_value;
-
-    /**
      * Instantiates a TzolkinDate object from its calendar representation.
      *
      * @param numeral 1-based day coefficient
@@ -31,15 +26,10 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      */
     public TzolkinDate(int numeral, TzolkinDate.Day day)
     {
-        // Convert to zero-based and mod by total number of coefficients
+        super(calculateValue(numeral, day.ordinal()));
+
         m_coefficient = (numeral - 1) % s_numCoefficients;
         m_day = day;
-
-        // Get the position in the cycle
-        int positionInCycle = (m_coefficient - m_day.ordinal()) * 2 % s_numCoefficients;
-
-        // And then add the total number of cycles
-        this.initialize(positionInCycle * Day.values().length + m_day.ordinal());
     }
 
     /**
@@ -49,19 +39,22 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      */
     public TzolkinDate(int value)
     {
-        this.initialize(value);
+        super(value);
         Day[] days = Day.values();
 
-        m_coefficient = m_value % s_numCoefficients;
-        m_day = days[m_value % days.length];
+        m_coefficient = toInt() % s_numCoefficients;
+        m_day = days[toInt() % days.length];
     }
 
-    private void initialize(int value)
+    /*
+     * (non-Javadoc)
+     *
+     * @see icd3.CyclicDate#cycle()
+     */
+    @Override
+    public int cycle()
     {
-        int cycle = TzolkinDate.cycle();
-
-        // Ensure that value is within the positive equivalence class (mod cycle)
-        m_value = (value % cycle + cycle) % cycle;
+        return tzolkinCycle();
     }
 
     /*
@@ -79,56 +72,12 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     /*
      * (non-Javadoc)
      *
-     * @see icd3.MayanDate#minus(java.lang.Object)
-     */
-    @Override
-    public int minus(TzolkinDate other)
-    {
-        if (null == other)
-        {
-            throw new NullPointerException("Cannot subtract a null Tzolkin Date");
-        }
-
-        // Subtract the integer representations
-        int difference = this.toInt() - other.toInt();
-        int cycle = TzolkinDate.cycle();
-
-        // Ensure that difference is within the positive equivalence class (mod cycle)
-        return (difference % cycle + cycle) % cycle;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see icd3.MayanDate#toInt()
-     */
-    @Override
-    public int toInt()
-    {
-        return m_value;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString()
     {
         return String.format("%d.%s", getNumeral(), getDay());
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object o)
-    {
-        // Must be non-null, also a TzolkinDate, and have the same integer representation
-        return o != null && o instanceof TzolkinDate && ((TzolkinDate) o).toInt() == this.toInt();
     }
 
     /**
@@ -181,12 +130,21 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      */
     private static final int s_numCoefficients = 13;
 
+    private static int calculateValue(int numeral, int day)
+    {
+        // Convert to zero-based and mod by total number of coefficients
+        int coefficient = (numeral - 1) % s_numCoefficients;
+
+        // Get the position in the cycle
+        return (coefficient - day) * Day.values().length * 2 + (day % s_numCoefficients);
+    }
+
     /**
-     * Give the number of date representations possible in the Tzolkin system.
+     * Give the number of date representations possible in this date type.
      *
-     * @return The number of equivalence classes represented by Tzolkin dates.
+     * @return The number of equivalence classes represented by this cyclic date.
      */
-    public static int cycle()
+    public static int tzolkinCycle()
     {
         // The cycle is the product of the two lengths, since they are mutually prime
         return s_numCoefficients * Day.values().length;

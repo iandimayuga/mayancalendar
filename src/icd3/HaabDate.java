@@ -3,34 +3,24 @@
  */
 package icd3;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * An immutable data structure that represents the Haab method of Mayan calendaring.
  */
-public class HaabDate implements MayanDate<HaabDate>
+public class HaabDate extends CyclicDate<HaabDate>
 {
-    /**
-     * Integer representation of this date
-     */
-    private int m_value;
-
     private int m_day;
 
     private Month m_month;
 
     public HaabDate(int numeral, Month month)
     {
+        super(month.daysBefore() + numeral - 1);
+
         // Numeral is 1-based, store 0-based
         int day = numeral - 1;
 
         m_month = month;
         m_day = Math.min(Math.max(0, day), month.days());
-
-        this.initialize(m_month.daysBefore() + m_day);
     }
 
     /**
@@ -40,18 +30,21 @@ public class HaabDate implements MayanDate<HaabDate>
      */
     public HaabDate(int value)
     {
-        this.initialize(value);
+        super(value);
 
-        m_month = Month.values()[m_value / s_daysPerMonth];
-        m_day = value - m_month.daysBefore();
+        m_month = Month.values()[toInt() / s_daysPerMonth];
+        m_day = toInt() - m_month.daysBefore();
     }
 
-    private void initialize(int value)
+    /*
+     * (non-Javadoc)
+     *
+     * @see icd3.CyclicDate#cycle()
+     */
+    @Override
+    public int cycle()
     {
-        int cycle = HaabDate.cycle();
-
-        // Ensure that value is within the positive equivalence class (mod cycle)
-        m_value = (value % cycle + cycle) % cycle;
+        return haabCycle();
     }
 
     /*
@@ -69,57 +62,12 @@ public class HaabDate implements MayanDate<HaabDate>
     /*
      * (non-Javadoc)
      *
-     * @see icd3.MayanDate#minus(java.lang.Object)
-     */
-    @Override
-    public int minus(HaabDate other)
-    {
-        if (null == other)
-        {
-            throw new NullPointerException("Cannot subtract a null Haab Date");
-        }
-
-        // Subtract the integer representations
-        int difference = this.toInt() - other.toInt();
-        int cycle = HaabDate.cycle();
-
-        // Ensure that difference is within the positive equivalence class (mod cycle)
-        return (difference % cycle + cycle) % cycle;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see icd3.MayanDate#toInt()
-     */
-    @Override
-    public int toInt()
-    {
-        // Return the internal integer value
-        return m_value;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString()
     {
         return String.format("%d.%s", getNumeral(), getMonth());
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Override
-    public boolean equals(Object o)
-    {
-        // Must be non-null, also a HaabDate, and have the same integer representation
-        return o != null && o instanceof HaabDate && ((HaabDate) o).toInt() == this.toInt();
     }
 
     /**
@@ -203,12 +151,7 @@ public class HaabDate implements MayanDate<HaabDate>
      */
     private static final int s_daysPerYear = 365;
 
-    /**
-     * Give the number of date representations possible in the Haab system.
-     *
-     * @return The number of equivalence classes represented by Haab dates.
-     */
-    public static int cycle()
+    public static int haabCycle()
     {
         // The cycle is the year length
         return s_daysPerYear;
