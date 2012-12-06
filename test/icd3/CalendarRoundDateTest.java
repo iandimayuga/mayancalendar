@@ -33,23 +33,16 @@ public class CalendarRoundDateTest
     }
 
     /**
-     * Test method for {@link icd3.CalendarRoundDate#CalendarRoundDate(int)}.
-     */
-    @Test
-    public void testCalendarRoundDateInt()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
      * Test method for {@link icd3.CalendarRoundDate#plus(int)}.
      */
     @Test
     public void testPlus()
     {
-        assertEquals(new CalendarRoundDate(new TzolkinDate(6, TzolkinDate.Day.KAN), new HaabDate(2,
-                HaabDate.Month.KAYAB)), new CalendarRoundDate(new TzolkinDate(3, TzolkinDate.Day.LAMAT), new HaabDate(
-                6, HaabDate.Month.PAX)).plus(16));
+        TzolkinDate t1 = new TzolkinDate(6, TzolkinDate.Day.KAN);
+        TzolkinDate t2 = new TzolkinDate(3, TzolkinDate.Day.LAMAT);
+        HaabDate h1 = new HaabDate(2, HaabDate.Month.KAYAB);
+        HaabDate h2 = new HaabDate(6, HaabDate.Month.PAX);
+        assertEquals(new CalendarRoundDate(t1, h1), new CalendarRoundDate(t2, h2).plus(16));
     }
 
     /**
@@ -58,7 +51,11 @@ public class CalendarRoundDateTest
     @Test
     public void testMinus()
     {
-        fail("Not yet implemented");
+        TzolkinDate t1 = new TzolkinDate(6, TzolkinDate.Day.KAN);
+        TzolkinDate t2 = new TzolkinDate(3, TzolkinDate.Day.LAMAT);
+        HaabDate h1 = new HaabDate(2, HaabDate.Month.KAYAB);
+        HaabDate h2 = new HaabDate(6, HaabDate.Month.PAX);
+        assertEquals(16, new CalendarRoundDate(t1, h1).minus(new CalendarRoundDate(t2,h2)));
     }
 
     /**
@@ -67,7 +64,7 @@ public class CalendarRoundDateTest
     @Test
     public void testToInt()
     {
-        fail("Not yet implemented");
+        assertEquals(0, new CalendarRoundDate(0).toInt());
     }
 
     /**
@@ -76,33 +73,8 @@ public class CalendarRoundDateTest
     @Test
     public void testToString()
     {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.CalendarRoundDate#getTzolkinDate()}.
-     */
-    @Test
-    public void testGetTzolkinDate()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.CalendarRoundDate#getHaabDate()}.
-     */
-    @Test
-    public void testGetHaabDate()
-    {
-        fail("Not yet implemented");
-    }
-
-    /**
-     * Test method for {@link icd3.CalendarRoundDate#equals(java.lang.Object)}.
-     */
-    @Test
-    public void testEqualsObject()
-    {
-        fail("Not yet implemented");
+        TzolkinDate t1 = new TzolkinDate(6, TzolkinDate.Day.KAN);
+        HaabDate h1 = new HaabDate(2, HaabDate.Month.KAYAB);
+        assertEquals("6.KAN 2.KAYAB", new CalendarRoundDate(t1, h1).toString());
     }
 }
