@@ -174,6 +174,11 @@ public class LongCountDate implements MayanDate<LongCountDate>
      */
     public static LongCountDate calendarRoundToLongCount(CalendarRoundDate calendarRound, LongCountDate start)
     {
+        if (null == calendarRound || null == start)
+        {
+            throw new NullPointerException("Date parameters must not be null.");
+        }
+
         // Find when the specified date begins
         int startSinceZero = start.toInt();
 
