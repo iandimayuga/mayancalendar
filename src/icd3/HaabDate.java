@@ -20,7 +20,7 @@ public class HaabDate extends CyclicDate<HaabDate>
         int day = numeral - 1;
 
         m_month = month;
-        m_day = Math.min(Math.max(0, day), month.days());
+        m_day = Math.min(Math.max(0, day), month.days() - 1);
     }
 
     /**

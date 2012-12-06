@@ -184,7 +184,8 @@ public class LongCountDate implements MayanDate<LongCountDate>
         int daysSinceStart = calendarRound.minus(calendarRoundStart);
 
         // Instantiate the LongCountDate corresponding to that many days after the start
-        return new LongCountDate(startSinceZero + daysSinceStart);
+        LongCountDate resultDate = new LongCountDate(startSinceZero + daysSinceStart);
+        return resultDate;
     }
 
     /**
