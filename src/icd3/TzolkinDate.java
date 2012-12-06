@@ -13,10 +13,28 @@ import java.util.regex.Pattern;
  */
 public class TzolkinDate implements MayanDate<TzolkinDate>
 {
-    /**
-     * Integer representation of this date
-     */
+    private int m_coefficient;
+    private Day m_day;
     private int m_value;
+
+    /**
+     * Instantiates a TzolkinDate object from its calendar representation.
+     *
+     * @param numeral 1-based day coefficient
+     * @param day Day name
+     */
+    public TzolkinDate(int numeral, TzolkinDate.Day day)
+    {
+        // Convert to zero-based and mod by total number of coefficients
+        m_coefficient = (numeral - 1) % s_numCoefficients;
+        m_day = day;
+
+        // Get the position in the cycle
+        int positionInCycle = (m_coefficient - m_day.ordinal()) * 2 % s_numCoefficients;
+
+        // And then add the total number of cycles
+        this.initialize(positionInCycle * Day.values().length + m_day.ordinal());
+    }
 
     /**
      * Instantiates a TzolkinDate object from its integer representation.
@@ -24,6 +42,15 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      * @param value The integer representation.
      */
     public TzolkinDate(int value)
+    {
+        this.initialize(value);
+        Day[] days = Day.values();
+
+        m_coefficient = m_value % s_numCoefficients;
+        m_day = days[m_value % days.length];
+    }
+
+    private void initialize(int value)
     {
         int cycle = TzolkinDate.cycle();
 
@@ -72,7 +99,6 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     @Override
     public int toInt()
     {
-        // Return the internal integer value
         return m_value;
     }
 
@@ -84,14 +110,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     @Override
     public String toString()
     {
-        // Coefficient is 1-based
-        int digit = m_value % s_numCoefficients + 1;
-
-        // Day number corresponds to a day name in the static array
-        int dayNumber = m_value % s_dayNames.length;
-        String dayName = s_dayNames[dayNumber];
-
-        return String.format("%d.%s", digit, dayName);
+        return String.format("%d.%s", getNumeral(), m_day.toString());
     }
 
     /*
@@ -107,28 +126,65 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     }
 
     /**
+     * Gets the 1-based numeral in the Tzolkin representation.
+     * @return The numeral
+     */
+    public int getNumeral()
+    {
+        // Numeral is 1-based
+        return m_coefficient + 1;
+    }
+
+    /**
+     * Gets the named day in the Tzolkin representation.
+     * @return The day
+     */
+    public Day getDay()
+    {
+        return m_day;
+    }
+
+    public enum Day
+    {
+        IMIX,
+        IK,
+        AKBAL,
+        KAN,
+        CHIKCHAN,
+        KIMI,
+        MANIK,
+        LAMAT,
+        MULUK,
+        OK,
+        CHUEN,
+        EB,
+        BEN,
+        IX,
+        MEN,
+        KIB,
+        KABAN,
+        ETZNAB,
+        KAWAK,
+        AJAW;
+    }
+
+    /**
      * The length of the cycle followed by the coefficients in a Tzolkin date.
      */
     private static final int s_numCoefficients = 13;
 
     /**
-     * The day names in a Tzolkin date. The length of this array is the length of this second cycle.
-     */
-    private static final String[] s_dayNames = { "imix", "ik", "akbal", "kan", "chikchan", "kimi", "manik", "lamat",
-            "muluk", "ok", "chuen", "eb", "ben", "ix", "men", "kib", "kaban", "etznab", "kawak", "ajaw" };
-
-    /**
      * Lookup table for day name representations
      */
-    private static final Map<String, Integer> s_nameTable = generateNameTable(s_dayNames);
+    private static final Map<String, Day> s_nameTable = generateNameTable();
 
     /**
      * Regular expression for this date representation
      */
-    private static final Pattern s_pattern = generatePattern(s_dayNames);
+    private static final Pattern s_pattern = generatePattern();
 
     // Regex capture group names
-    private static final String s_digitGroup = "tzolkinDigit";
+    private static final String s_numeralGroup = "tzolkinDigit";
 
     private static final String s_dayGroup = "tzolkinDay";
 
@@ -138,14 +194,15 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      * @param dayNames Array of day names.
      * @return The lookup table.
      */
-    private static Map<String, Integer> generateNameTable(String[] dayNames)
+    private static Map<String, Day> generateNameTable()
     {
+        Day[] days = Day.values();
         // Initialize the lookup table
-        Map<String, Integer> nameTable = new HashMap<>();
-        for (int i = 0; i < dayNames.length; ++i)
+        Map<String, Day> nameTable = new HashMap<>();
+        for (Day day : days)
         {
             // Keep everything lower case for case insensitivity
-            nameTable.put(dayNames[i].toLowerCase(), i);
+            nameTable.put(day.name().toLowerCase(), day);
         }
 
         return nameTable;
@@ -157,21 +214,23 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
      * @param dayNames The named days in the Tzolkin system.
      * @return A pattern that will match Tzolkin dates (case and whitespace insensitive).
      */
-    private static Pattern generatePattern(String[] dayNames)
+    private static Pattern generatePattern()
     {
+        Day[] days = Day.values();
+
         // Build the regex string dynamically
         StringBuilder patternBuilder = new StringBuilder();
 
         // Add the digit, dot, and begin capturing group for day name
-        patternBuilder.append(String.format("\\s*(?<%s>0*([1-9]|1[0-3]))\\s*\\.\\s*(?<%s>", s_digitGroup, s_dayGroup));
+        patternBuilder.append(String.format("\\s*(?<%s>0*([1-9]|1[0-3]))\\s*\\.\\s*(?<%s>", s_numeralGroup, s_dayGroup));
 
         // First name not preceded by a pipe "|"
-        patternBuilder.append(dayNames[0]);
+        patternBuilder.append(days[0].toString());
 
         // Loop through remaining names
-        for (int i = 1; i < dayNames.length; ++i)
+        for (int i = 1; i < days.length; ++i)
         {
-            patternBuilder.append(String.format("|%s", dayNames[i]));
+            patternBuilder.append(String.format("|%s", days[i].toString()));
         }
 
         patternBuilder.append(")\\s*");
@@ -199,7 +258,7 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
     public static int cycle()
     {
         // The cycle is the product of the two lengths, since they are mutually prime
-        return s_numCoefficients * s_dayNames.length;
+        return s_numCoefficients * Day.values().length;
     }
 
     /**
@@ -221,19 +280,12 @@ public class TzolkinDate implements MayanDate<TzolkinDate>
         }
 
         // Extract capture groups
-        int digit = Integer.parseInt(m.group(s_digitGroup));
-        String day = m.group(s_dayGroup);
-
-        // The digit is one-based, but we use zero-based for multiplicative purposes
-        digit -= 1;
+        int numeral = Integer.parseInt(m.group(s_numeralGroup));
+        String dayName = m.group(s_dayGroup);
 
         // Look up the day name with lower case for case insensitivity
-        int dayNumber = s_nameTable.get(day.toLowerCase());
+        Day day = s_nameTable.get(dayName.toLowerCase());
 
-        // The integer representation is given by finding the position in the cycle
-        int positionInCycle = (digit - dayNumber) * 2 % s_numCoefficients;
-
-        // And then adding the total number of cycles
-        return new TzolkinDate(positionInCycle * s_dayNames.length + dayNumber);
+        return new TzolkinDate(numeral, day);
     }
 }

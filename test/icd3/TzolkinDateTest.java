@@ -62,10 +62,10 @@ public class TzolkinDateTest
     @Test
     public void testToString()
     {
-        assertEquals("1.imix", new TzolkinDate(0).toString());
-        assertEquals("2.ik", new TzolkinDate(1).toString());
-        assertEquals("8.imix", new TzolkinDate(20).toString());
-        assertEquals("12.chikchan", new TzolkinDate(24).toString());
+        assertEquals("1.IMIX", new TzolkinDate(0).toString());
+        assertEquals("2.IK", new TzolkinDate(1).toString());
+        assertEquals("8.IMIX", new TzolkinDate(20).toString());
+        assertEquals("12.CHIKCHAN", new TzolkinDate(24).toString());
     }
 
     /**
@@ -75,8 +75,8 @@ public class TzolkinDateTest
     public void testEqualsObject()
     {
         assertEquals(new TzolkinDate(0), new TzolkinDate(0));
-        assertEquals(new TzolkinDate(24), TzolkinDate.parse("12.chikchan"));
-        assertEquals(new TzolkinDate(148), TzolkinDate.parse("6.muluk"));
+        assertEquals(new TzolkinDate(24), new TzolkinDate(12, TzolkinDate.Day.CHIKCHAN));
+        assertEquals(new TzolkinDate(148), new TzolkinDate(6, TzolkinDate.Day.MULUK));
     }
 
     /**
@@ -88,7 +88,7 @@ public class TzolkinDateTest
         assertEquals(new TzolkinDate(0), new TzolkinDate(0));
         assertEquals(new TzolkinDate(44), TzolkinDate.parse("006.chiKChan"));
         assertEquals(new TzolkinDate(243), TzolkinDate.parse(" 10 . kan "));
-        assertEquals("6.kan", TzolkinDate.parse("6.kan").toString());
+        assertEquals("6.KAN", TzolkinDate.parse("6.kan").toString());
     }
 
 }
